@@ -1,0 +1,76 @@
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+class AppColors {
+  static const Color primary = Color(0xFF5669FF);
+  static const Color txt_light = Color(0xFF1C1C1C);
+  static const Color txt_dark = Color(0xFFF4EBDC);
+  static const Color bg_light = Color(0xFFF2FEFF);
+  static const Color bg_dark = Color(0xFF101127);
+  static const Color sub_txt_light = Color(0xFF7B7B7B);
+  static const Color sub_txt_dark = Color(0xFFF4EBDC);
+}
+
+class AppImages {
+  static const String logo = "assets/images/app_logo.png";
+}
+
+class AppIcons {
+  // static const String ic_quran = "assets/icons/quran.svg";
+}
+
+class AppTheme {
+  static var lightTheme = ThemeData(
+    colorScheme: ColorScheme.light(primary: AppColors.primary),
+    textTheme: TextTheme(
+      titleLarge: GoogleFonts.jockeyOne(
+        fontSize: 20,
+        fontWeight: FontWeight.w700,
+        color: AppColors.primary,
+      ),
+      titleMedium: GoogleFonts.jockeyOne(
+        fontSize: 20,
+        fontWeight: FontWeight.w500,
+        color: AppColors.primary,
+      ),
+      bodyMedium: GoogleFonts.jockeyOne(
+        fontSize: 16,
+        fontWeight: FontWeight.w500,
+        color: AppColors.txt_light,
+      ),
+    ),
+
+    bottomNavigationBarTheme: BottomNavigationBarThemeData(
+      backgroundColor: AppColors.primary,
+      selectedItemColor: AppColors.bg_light,
+      selectedIconTheme: IconThemeData(color: AppColors.bg_light, size: 24),
+      unselectedItemColor: AppColors.bg_light,
+    ),
+    bottomAppBarTheme: BottomAppBarTheme(color: AppColors.primary),
+
+    scaffoldBackgroundColor: AppColors.bg_light,
+
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: AppColors.primary,
+        foregroundColor: AppColors.bg_light,
+        padding: EdgeInsets.symmetric(vertical: 16),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      ),
+    ),
+
+    appBarTheme: AppBarTheme(
+      color: AppColors.bg_light,
+      surfaceTintColor: Colors.transparent,
+      foregroundColor: AppColors.primary,
+      titleTextStyle: TextStyle(
+        color: AppColors.primary,
+        fontSize: 24,
+        fontWeight: FontWeight.w400,
+      ),
+      centerTitle: true,
+    ),
+  );
+
+  //  static var darkTheme = ThemeData();
+}
