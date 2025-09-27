@@ -1,10 +1,22 @@
+import 'package:evently/UI/common/AppSharedPreferences.dart';
 import 'package:evently/UI/design/design.dart';
+import 'package:evently/UI/provider/LanguageProvider.dart';
+import 'package:evently/UI/provider/ThemeProvider.dart';
 import 'package:evently/UI/screens/onborading/onboardingScreen.dart';
+import 'package:evently/l10n/app_localizations.dart';
 import 'package:evently/routes.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await AppSharedPreferences.init();
+  runApp(MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
+        ChangeNotifierProvider(create: (_) => LanguageProvider()),
+      ],
+      child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -13,6 +25,8 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    ThemeProvider provider = Provider.of<ThemeProvider>(context);
+    LanguageProvider languageProvider = Provider.of<LanguageProvider>(context);
     return MaterialApp(
       title: 'evently',
       debugShowCheckedModeBanner: false,
@@ -22,7 +36,11 @@ class MyApp extends StatelessWidget {
         AppRoutes.OnboardingScreen.routeName: (context) => OnboradingScreen(),
       },
       theme: AppTheme.lightTheme,
-      themeMode: ThemeMode.light,
+      darkTheme: AppTheme.darkTheme,
+      themeMode: provider.getSelectedThemeMode(),
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      locale: languageProvider.getSelectedLocale(),
     );
   }
 }

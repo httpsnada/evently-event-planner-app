@@ -13,6 +13,7 @@ class AppColors {
 
 class AppImages {
   static const String logo = "assets/images/app_logo.png";
+  static const String onboarding_1 = "assets/images/onboarding_1.png";
 }
 
 class AppIcons {
@@ -56,6 +57,11 @@ class AppTheme {
         foregroundColor: AppColors.bg_light,
         padding: EdgeInsets.symmetric(vertical: 16),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        textStyle: TextStyle(
+          color: AppColors.bg_light,
+          fontSize: 16,
+          fontWeight: FontWeight.w700,
+        ),
       ),
     ),
 
@@ -72,5 +78,60 @@ class AppTheme {
     ),
   );
 
-  //  static var darkTheme = ThemeData();
+  static var darkTheme = ThemeData(
+    colorScheme: ColorScheme.dark(primary: AppColors.primary),
+    textTheme: TextTheme(
+      titleLarge: GoogleFonts.jockeyOne(
+        fontSize: 20,
+        fontWeight: FontWeight.w700,
+        color: AppColors.primary,
+      ),
+      titleMedium: GoogleFonts.jockeyOne(
+        fontSize: 20,
+        fontWeight: FontWeight.w500,
+        color: AppColors.primary,
+      ),
+      bodyMedium: GoogleFonts.jockeyOne(
+        fontSize: 16,
+        fontWeight: FontWeight.w500,
+        color: AppColors.txt_dark,
+      ),
+    ),
+
+    bottomNavigationBarTheme: BottomNavigationBarThemeData(
+      backgroundColor: AppColors.primary,
+      selectedItemColor: AppColors.bg_light,
+      selectedIconTheme: IconThemeData(color: AppColors.bg_light, size: 24),
+      unselectedItemColor: AppColors.bg_light,
+    ),
+    bottomAppBarTheme: BottomAppBarTheme(color: AppColors.primary),
+
+    scaffoldBackgroundColor: AppColors.bg_dark,
+
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: AppColors.primary,
+        foregroundColor: AppColors.bg_light,
+        padding: EdgeInsets.symmetric(vertical: 16),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        textStyle: TextStyle(
+          color: AppColors.bg_light,
+          fontSize: 16,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+    ),
+
+    appBarTheme: AppBarTheme(
+      color: AppColors.bg_dark,
+      surfaceTintColor: Colors.transparent,
+      foregroundColor: AppColors.primary,
+      titleTextStyle: TextStyle(
+        color: AppColors.primary,
+        fontSize: 24,
+        fontWeight: FontWeight.w400,
+      ),
+      centerTitle: true,
+    ),
+  );
 }
