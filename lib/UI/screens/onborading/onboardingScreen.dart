@@ -85,14 +85,15 @@ class OnboradingScreen extends StatelessWidget {
                     LanguageSwitcher(),
                   ],
                 ),
-                Spacer(),atedButton(
+                Spacer(),
+                ElevatedButton(
                     onPressed: () {
                       Navigator.pushNamed(
                         context,
                         AppRoutes.RegisterScreen.routeName,
                       );
                     },
-                    chichild: Text(AppLocalizations.of(context)!.letsStart))
+                    child: Text(AppLocalizations.of(context)!.letsStart))
 
               ],
             ),
