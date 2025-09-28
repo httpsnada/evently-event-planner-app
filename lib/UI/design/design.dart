@@ -66,7 +66,7 @@ class AppTheme {
     ),
 
     appBarTheme: AppBarTheme(
-      color: AppColors.bg_light,
+      backgroundColor: AppColors.bg_light,
       surfaceTintColor: Colors.transparent,
       foregroundColor: AppColors.primary,
       titleTextStyle: TextStyle(
@@ -76,6 +76,58 @@ class AppTheme {
       ),
       centerTitle: true,
     ),
+
+      inputDecorationTheme: InputDecorationTheme(
+          filled: true,
+          fillColor: AppColors.bg_light,
+          floatingLabelBehavior: FloatingLabelBehavior.auto,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: BorderSide(
+              color: AppColors.sub_txt_light,
+              width: 1,
+            ),
+          ),
+          labelStyle: TextStyle(
+            color: AppColors.sub_txt_light,
+            fontSize: 16,
+            fontWeight: FontWeight.w400,
+          ),
+          floatingLabelStyle: TextStyle(
+            color: AppColors.primary,
+            fontSize: 16,
+            fontWeight: FontWeight.w400,
+          ),
+          contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          prefixIconColor: AppColors.sub_txt_light,
+          suffixIconColor: AppColors.sub_txt_light,
+
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: BorderSide(
+              color: AppColors.primary,
+              width: 1.5,
+            ),
+          ),
+
+          errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: BorderSide(
+              color: Colors.red,
+              width: 1,
+            ),
+          ),
+
+          focusedErrorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: BorderSide(
+              color: Colors.red,
+              width: 1.5,
+            ),
+
+          )
+
+      )
   );
 
   static var darkTheme = ThemeData(
@@ -123,7 +175,7 @@ class AppTheme {
     ),
 
     appBarTheme: AppBarTheme(
-      color: AppColors.bg_dark,
+      backgroundColor: AppColors.bg_dark,
       surfaceTintColor: Colors.transparent,
       foregroundColor: AppColors.primary,
       titleTextStyle: TextStyle(
@@ -133,5 +185,57 @@ class AppTheme {
       ),
       centerTitle: true,
     ),
+
+      inputDecorationTheme: InputDecorationTheme(
+          filled: true,
+          fillColor: AppColors.bg_dark,
+          floatingLabelBehavior: FloatingLabelBehavior.auto,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: BorderSide(
+              color: AppColors.sub_txt_dark,
+              width: 1,
+            ),
+          ),
+          labelStyle: TextStyle(
+            color: AppColors.sub_txt_dark,
+            fontSize: 16,
+            fontWeight: FontWeight.w400,
+          ),
+          floatingLabelStyle: TextStyle(
+            color: AppColors.primary,
+            fontSize: 16,
+            fontWeight: FontWeight.w400,
+          ),
+          contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          prefixIconColor: AppColors.sub_txt_dark,
+          suffixIconColor: AppColors.sub_txt_dark,
+
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: BorderSide(
+              color: AppColors.primary,
+              width: 1.5,
+            ),
+          ),
+
+          errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: BorderSide(
+              color: Colors.red,
+              width: 1,
+            ),
+          ),
+
+          focusedErrorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16),
+            borderSide: BorderSide(
+              color: Colors.red,
+              width: 1.5,
+            ),
+
+          )
+
+      )
   );
 }

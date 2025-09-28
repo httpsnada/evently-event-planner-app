@@ -3,6 +3,7 @@ import 'package:evently/UI/common/LanguageSwitcher.dart';
 import 'package:evently/UI/common/ThemeSwitcher.dart';
 import 'package:evently/UI/design/design.dart';
 import 'package:evently/l10n/app_localizations.dart';
+import 'package:evently/routes.dart';
 import 'package:flutter/material.dart';
 
 class OnboradingScreen extends StatelessWidget {
@@ -84,10 +85,14 @@ class OnboradingScreen extends StatelessWidget {
                     LanguageSwitcher(),
                   ],
                 ),
-                Spacer(),
-
-                ElevatedButton(onPressed: () {},
-                    child: Text(AppLocalizations.of(context)!.letsStart))
+                Spacer(),atedButton(
+                    onPressed: () {
+                      Navigator.pushNamed(
+                        context,
+                        AppRoutes.RegisterScreen.routeName,
+                      );
+                    },
+                    chichild: Text(AppLocalizations.of(context)!.letsStart))
 
               ],
             ),

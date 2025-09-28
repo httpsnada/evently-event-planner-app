@@ -3,6 +3,7 @@ import 'package:evently/UI/design/design.dart';
 import 'package:evently/UI/provider/LanguageProvider.dart';
 import 'package:evently/UI/provider/ThemeProvider.dart';
 import 'package:evently/UI/screens/onborading/onboardingScreen.dart';
+import 'package:evently/UI/screens/register/RegisterScreen.dart';
 import 'package:evently/l10n/app_localizations.dart';
 import 'package:evently/routes.dart';
 import 'package:flutter/material.dart';
@@ -34,6 +35,7 @@ class MyApp extends StatelessWidget {
       initialRoute: AppRoutes.OnboardingScreen.routeName,
       routes: {
         AppRoutes.OnboardingScreen.routeName: (context) => OnboradingScreen(),
+        AppRoutes.RegisterScreen.routeName: (context) => RegisterScreen(),
       },
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
