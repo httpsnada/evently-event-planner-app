@@ -1,21 +1,30 @@
 import 'package:evently/UI/common/AppSharedPreferences.dart';
 import 'package:evently/UI/design/design.dart';
+import 'package:evently/UI/provider/AuthenticationProvider.dart';
 import 'package:evently/UI/provider/LanguageProvider.dart';
 import 'package:evently/UI/provider/ThemeProvider.dart';
+import 'package:evently/UI/screens/login/LoginScreen.dart';
 import 'package:evently/UI/screens/onborading/onboardingScreen.dart';
 import 'package:evently/UI/screens/register/RegisterScreen.dart';
 import 'package:evently/l10n/app_localizations.dart';
 import 'package:evently/routes.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'firebase_options.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   await AppSharedPreferences.init();
   runApp(MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => LanguageProvider()),
+        ChangeNotifierProvider(create: (_) => AuthenticationProvider())
       ],
       child: const MyApp()));
 }
@@ -36,6 +45,7 @@ class MyApp extends StatelessWidget {
       routes: {
         AppRoutes.OnboardingScreen.routeName: (context) => OnboradingScreen(),
         AppRoutes.RegisterScreen.routeName: (context) => RegisterScreen(),
+        AppRoutes.LoginScreen.routeName: (context) => LoginScreen(),
       },
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,

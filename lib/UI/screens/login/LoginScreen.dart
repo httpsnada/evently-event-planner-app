@@ -7,21 +7,17 @@ import 'package:evently/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class RegisterScreen extends StatefulWidget {
-  RegisterScreen({super.key});
+class LoginScreen extends StatefulWidget {
+  LoginScreen({super.key});
 
   @override
-  State<RegisterScreen> createState() => _RegisterScreenState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _RegisterScreenState extends State<RegisterScreen> {
-  TextEditingController nameController = TextEditingController();
-
+class _LoginScreenState extends State<LoginScreen> {
   TextEditingController emailController = TextEditingController();
 
   TextEditingController passwordController = TextEditingController();
-
-  TextEditingController rePasswordController = TextEditingController();
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   bool isLoading = false;
@@ -30,7 +26,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-      appBar: AppBar(title: Text("Register")),
+      appBar: AppBar(title: Text("Login")),
 
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -48,19 +44,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    CustomFormField(
-                      labelText: "Name",
-                      prefixIcon: Icons.person,
-                      keyboardType: TextInputType.name,
-                      validator: (text) {
-                        if (text?.trim().isEmpty == true) {
-                          return "Please enter your name";
-                        }
-                        return null;
-                      },
-                      controller: nameController,
-                    ),
-
                     CustomFormField(
                       labelText: "Email",
                       prefixIcon: Icons.email,
@@ -96,39 +79,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       controller: passwordController,
                     ),
 
-                    CustomFormField(
-                      labelText: "Re Password",
-                      prefixIcon: Icons.lock,
-                      isPassword: true,
-                      validator: (text) {
-                        if (text?.trim().isEmpty == true) {
-                          return "Please enter a password";
-                        }
-                        if (text!.length < 6) {
-                          return "Password must be at least 6 characters";
-                        }
-                        if (passwordController.text != text) {
-                          return "Passwords do not match";
-                        }
-                        return null;
-                      },
-                      controller: rePasswordController,
-                    ),
-
                     SizedBox(height: 12),
                     ElevatedButton(
-                      onPressed: isLoading ? null : () {
-                        createAccount();
-                      },
-                      child: isLoading ? Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          CircularProgressIndicator(),
-                          SizedBox(width: 8,),
-                          Text("Creating an account")
-                        ],
-                      ) :
-                      Text("Create Account"),
+                      onPressed: isLoading
+                          ? null
+                          : () {
+                              login();
+                            },
+                      child: isLoading
+                          ? Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                CircularProgressIndicator(),
+                                SizedBox(width: 8),
+                                Text("Logging in"),
+                              ],
+                            )
+                          : Text("Log in"),
                     ),
                   ],
                 ),
@@ -140,17 +107,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "Already have an account?",
+                    "Doesn't have an account?",
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                   SizedBox(width: 4),
                   TextButton(
                     onPressed: () {
                       Navigator.pushNamed(
-                          context, AppRoutes.LoginScreen.routeName);
+                        context,
+                        AppRoutes.RegisterScreen.routeName,
+                      );
                     },
                     child: Text(
-                      "Login",
+                      "Sign Up",
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: AppColors.primary,
                       ),
@@ -169,7 +138,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  void createAccount() async {
+  void login() async {
     if (validateForm() == false) {
       return;
     }
@@ -177,15 +146,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
       isLoading = true;
     });
     AuthenticationProvider provider = Provider.of<AuthenticationProvider>(
-        context, listen: false);
-    AuthResponse response = await provider.register(
-        emailController.text, passwordController.text, nameController.text);
+      context,
+      listen: false,
+    );
+    AuthResponse response = await provider.login(
+      emailController.text,
+      passwordController.text,
+    );
     if (response.success) {
       //create an account
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("User Registered Successfully")));
-    }
-    else {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Logged in Successfully")));
+    } else {
       hangleAuthError(response);
     }
     setState(() {
@@ -211,17 +184,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   void hangleAuthError(AuthResponse response) {
-    if (response.failure == AuthFailure.weakPass) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Weak Password")));
-    }
-    else if (response.failure == AuthFailure.emailInUse) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Email already in use")));
-    }
-    else {
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("Something went wrong")));
+    if (response.failure == AuthFailure.invalidCredential) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Wrong Email or Password")));
     }
   }
 
@@ -229,5 +195,4 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return formKey.currentState?.validate() ?? false;
     // pass through each field and validate it
   }
-
 }
