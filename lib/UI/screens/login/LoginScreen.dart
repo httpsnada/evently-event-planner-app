@@ -26,7 +26,8 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-      appBar: AppBar(title: Text("Login")),
+      appBar: AppBar(title: Text("Login"),
+        automaticallyImplyLeading: false,),
 
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -113,7 +114,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   SizedBox(width: 4),
                   TextButton(
                     onPressed: () {
-                      Navigator.pushNamed(
+                      Navigator.pushReplacementNamed(
                         context,
                         AppRoutes.RegisterScreen.routeName,
                       );
@@ -158,6 +159,7 @@ class _LoginScreenState extends State<LoginScreen> {
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text("Logged in Successfully")));
+      Navigator.pushReplacementNamed(context, AppRoutes.HomeScreen.routeName);
     } else {
       hangleAuthError(response);
     }

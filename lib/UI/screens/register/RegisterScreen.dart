@@ -30,7 +30,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-      appBar: AppBar(title: Text("Register")),
+      appBar: AppBar(title: Text("Register"),
+        automaticallyImplyLeading: false,),
 
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -146,7 +147,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   SizedBox(width: 4),
                   TextButton(
                     onPressed: () {
-                      Navigator.pushNamed(
+                      Navigator.pushReplacementNamed(
                           context, AppRoutes.LoginScreen.routeName);
                     },
                     child: Text(
@@ -184,6 +185,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
       //create an account
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("User Registered Successfully")));
+      Navigator.pushReplacementNamed(context, AppRoutes.HomeScreen.routeName);
+
     }
     else {
       hangleAuthError(response);

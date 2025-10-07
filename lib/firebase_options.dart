@@ -65,4 +65,5 @@ class DefaultFirebaseOptions {
     storageBucket: 'evently-app-12345.firebasestorage.app',
     iosBundleId: 'com.example.evently',
   );
+
 }

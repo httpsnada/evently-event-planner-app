@@ -1,8 +1,11 @@
+import 'package:evently/database/UsersDao.dart';
+import 'package:evently/database/model/AppUser.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class AuthenticationProvider extends ChangeNotifier {
   var _fb_authService = FirebaseAuth.instance; //singleton
+
   Future<AuthResponse> register(
     String email,
     String password,
@@ -13,6 +16,15 @@ class AuthenticationProvider extends ChangeNotifier {
         email: email,
         password: password,
       );
+
+      AppUser user = AppUser(
+          id: credential.user?.uid,
+          name: name,
+          email: email
+      );
+
+      await UsersDao.addUser(user);
+
       return AuthResponse(success: true, credential: credential);
     } on FirebaseAuthException catch (e) {
       if (e.code == AuthFailure.weakPass.code) {
@@ -33,7 +45,10 @@ class AuthenticationProvider extends ChangeNotifier {
         email: email,
         password: password,
       );
-      return AuthResponse(success: true, credential: credential);
+      // retrieve user
+      AppUser? user = await UsersDao.getUserById(credential.user?.uid);
+
+      return AuthResponse(success: true, credential: credential, user: user);
     } on FirebaseAuthException catch (e) {
       if (e.code == AuthFailure.invalidCredential.code) {
         return AuthResponse(
@@ -55,7 +70,10 @@ class AuthResponse {
 
   UserCredential? credential;
 
-  AuthResponse({required this.success, this.failure, this.credential});
+  AppUser? user;
+
+  AuthResponse({required this.success, this.failure,
+    this.credential, this.user});
 }
 
 enum AuthFailure {
