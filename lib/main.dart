@@ -38,11 +38,16 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     ThemeProvider provider = Provider.of<ThemeProvider>(context);
     LanguageProvider languageProvider = Provider.of<LanguageProvider>(context);
+    AuthenticationProvider authProvider = Provider.of<AuthenticationProvider>(
+        context);
+
     return MaterialApp(
       title: 'evently',
       debugShowCheckedModeBanner: false,
-      home: OnboradingScreen(),
-      initialRoute: AppRoutes.OnboardingScreen.routeName,
+      // home: OnboradingScreen(),
+      initialRoute:
+      authProvider.isLoggedInBefore() ? AppRoutes.HomeScreen.routeName
+          : AppRoutes.OnboardingScreen.routeName,
       routes: {
         AppRoutes.OnboardingScreen.routeName: (context) => OnboradingScreen(),
         AppRoutes.RegisterScreen.routeName: (context) => RegisterScreen(),

@@ -5,6 +5,31 @@ import 'package:flutter/material.dart';
 
 class AuthenticationProvider extends ChangeNotifier {
   var _fb_authService = FirebaseAuth.instance; //singleton
+  var _fbAuthUser = FirebaseAuth.instance.currentUser;
+  AppUser? _databaseUser;
+
+  AuthenticationProvider() {
+    retrieveUserFromDatabase();
+  }
+
+  AppUser? getUser() {
+    return _databaseUser;
+  }
+
+  void retrieveUserFromDatabase() async {
+    if (_fbAuthUser != null) {
+      _databaseUser = await UsersDao.getUserById(_fbAuthUser?.uid);
+    }
+    notifyListeners();
+  }
+
+  bool isLoggedInBefore() {
+    var user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      return false;
+    }
+    return true;
+  }
 
   Future<AuthResponse> register(
     String email,
@@ -24,6 +49,9 @@ class AuthenticationProvider extends ChangeNotifier {
       );
 
       await UsersDao.addUser(user);
+      _databaseUser = user;
+      _fbAuthUser = credential.user;
+
 
       return AuthResponse(success: true, credential: credential);
     } on FirebaseAuthException catch (e) {
@@ -61,6 +89,14 @@ class AuthenticationProvider extends ChangeNotifier {
     }
     return AuthResponse(success: false, failure: AuthFailure.generalError);
   }
+
+  void logout() {
+    _fb_authService.signOut();
+    _fbAuthUser = null;
+    _databaseUser = null;
+    notifyListeners();
+  }
+
 }
 
 class AuthResponse {

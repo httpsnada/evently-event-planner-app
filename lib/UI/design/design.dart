@@ -14,6 +14,10 @@ class AppColors {
 class AppImages {
   static const String logo = "assets/images/app_logo.png";
   static const String onboarding_1 = "assets/images/onboarding_1.png";
+  static const String gaming = "assets/images/gaming.jpg";
+  static const String birthday = "assets/images/birthday.jpg";
+  static const String sports = "assets/images/Sport.jpg";
+  static const String workshop = "assets/images/workshop.jpg";
 }
 
 class AppIcons {
@@ -66,6 +70,7 @@ class AppTheme {
     ),
 
     appBarTheme: AppBarTheme(
+      elevation: 3,
       backgroundColor: AppColors.bg_light,
       surfaceTintColor: Colors.transparent,
       foregroundColor: AppColors.primary,
@@ -175,6 +180,7 @@ class AppTheme {
     ),
 
     appBarTheme: AppBarTheme(
+      elevation: 3,
       backgroundColor: AppColors.bg_dark,
       surfaceTintColor: Colors.transparent,
       foregroundColor: AppColors.primary,
