@@ -7,37 +7,41 @@ class TabBarItem extends StatelessWidget {
   final String text;
   final int index;
   final int currentIndex;
+  bool reverseColors = false;
 
-  const TabBarItem({
+  TabBarItem({
     required this.icon,
     required this.text,
     required this.index,
     required this.currentIndex,
+    this.reverseColors = false
   });
 
   @override
   Widget build(BuildContext context) {
+    var backgroundColor = reverseColors ? Colors.white : AppColors.primary;
+    var textColor = reverseColors ? AppColors.primary : Colors.white;
     // TODO: implement build
     return Container(
       margin: EdgeInsets.only(bottom: 16),
       padding: EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: currentIndex == index ? Colors.white : Colors.transparent,
-        border: Border.all(color: Colors.white, width: 1),
+        color: currentIndex == index ? textColor : backgroundColor,
+        border: Border.all(color: textColor, width: 1),
         borderRadius: BorderRadius.circular(46),
       ),
       child: Row(
         children: [
           Icon(
             icon,
-            color: currentIndex == index ? AppColors.primary : Colors.white,
+            color: currentIndex == index ? backgroundColor : textColor,
           ),
           SizedBox(width: 8),
           Text(
             text,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               fontFamily: GoogleFonts.inter().fontFamily,
-              color: currentIndex == index ? AppColors.primary : Colors.white,
+              color: currentIndex == index ? backgroundColor : textColor,
             ),
           ),
         ],

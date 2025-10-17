@@ -5,7 +5,7 @@ typedef Validator = String? Function(String? text);
 class CustomFormField extends StatefulWidget {
   String labelText;
 
-  IconData prefixIcon;
+  IconData? prefixIcon;
 
   TextInputType keyboardType;
 
@@ -15,13 +15,16 @@ class CustomFormField extends StatefulWidget {
 
   TextEditingController? controller;
 
+  int lines;
+
   CustomFormField({
     required this.labelText,
-    required this.prefixIcon,
+    this.prefixIcon,
     this.keyboardType = TextInputType.text,
     this.isPassword = false,
     this.validator,
     this.controller,
+    this.lines = 1
   });
 
   @override
@@ -37,12 +40,15 @@ class _CustomFormFieldState extends State<CustomFormField> {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 8),
       child: TextFormField(
+        maxLines: widget.lines,
         controller: widget.controller,
         obscureText: widget.isPassword ? isTextVisible : false,
         keyboardType: widget.keyboardType,
         decoration: InputDecoration(
           labelText: widget.labelText,
-          prefixIcon: Icon(widget.prefixIcon),
+          prefixIcon: widget.prefixIcon != null
+              ? Icon(widget.prefixIcon)
+              : null,
           suffixIcon: widget.isPassword
               ? InkWell(
                   onTap: () {
