@@ -38,7 +38,7 @@ class AppTheme {
         fontWeight: FontWeight.w500,
         color: AppColors.primary,
       ),
-      bodyMedium: GoogleFonts.jockeyOne(
+      bodyMedium: GoogleFonts.inter(
         fontSize: 16,
         fontWeight: FontWeight.w500,
         color: AppColors.txt_light,

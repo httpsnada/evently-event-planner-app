@@ -1,9 +1,13 @@
+import 'package:evently/UI/extensions/date_time_extension.dart';
 import 'package:flutter/material.dart';
 
+import '../../database/model/Event.dart';
 import '../design/design.dart';
 
 class EventCard extends StatelessWidget {
-  const EventCard({super.key});
+  final Event event;
+
+  const EventCard(this.event, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +20,7 @@ class EventCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: AppColors.primary),
         image: DecorationImage(
-          image: AssetImage(AppImages.birthday),
+          image: AssetImage(event.getCategoryImage()),
           fit: BoxFit.cover,
         ),
       ),
@@ -31,9 +35,15 @@ class EventCard extends StatelessWidget {
             ),
             child: Column(
               children: [
-                Text("30", style: Theme.of(context).textTheme.titleLarge),
+                Text("${event.date?.day}", style: Theme
+                    .of(context)
+                    .textTheme
+                    .titleLarge),
                 SizedBox(height: 4),
-                Text("Jan", style: Theme.of(context).textTheme.titleLarge),
+                Text(event.date?.formatMonth() ?? " ", style: Theme
+                    .of(context)
+                    .textTheme
+                    .titleLarge),
               ],
             ),
           ),
@@ -50,7 +60,7 @@ class EventCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "This is a Birthday Party ",
+                  event.description ?? " ",
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     fontSize: 14,
                     // fontFamily: GoogleFonts.inter().fontFamily
