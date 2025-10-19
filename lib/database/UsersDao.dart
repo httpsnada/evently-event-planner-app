@@ -32,6 +32,23 @@ class UsersDao {
     var doc = await _getUsersCollection().doc(id).get();
     return doc.data();
   }
+
+  static Future<AppUser> addToFavorite(AppUser user, String? eventId) async {
+    if (eventId == null) return user;
+    user.favorites.add(eventId);
+    await _getUsersCollection().doc(user.id).set(user);
+    return user;
+  }
+
+
+  static Future<AppUser> removeFromFavorite(AppUser user,
+      String? eventId) async {
+    user.favorites.remove(eventId);
+    await _getUsersCollection().doc(user.id).set(user);
+    return user;
+  }
+
+
 }
 
 // we connect the user id in the id table with the uid in the authentication table

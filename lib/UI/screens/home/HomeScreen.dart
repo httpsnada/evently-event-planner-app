@@ -142,7 +142,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 });
               }),
           ),
-          Expanded(child: taps[currentBottomNavIndex],)
+          Expanded(child: HomeTab(
+              allCategories[currentTabIndex]
+          ),)
         ],
       ),
 

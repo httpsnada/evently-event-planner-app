@@ -2,14 +2,13 @@ import 'package:evently/UI/design/design.dart';
 
 class Event {
   String? id;
-
   String? creatorUserId;
-
   String? title;
   String? description;
   DateTime? date;
   DateTime? time;
   int? categoryID;
+  bool isFav = false;
 
   Event({
     this.id,

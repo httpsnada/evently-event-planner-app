@@ -37,18 +37,19 @@ class EventsDao {
 
 
   static Stream<List<Event>> getRealTimeEvents(int? categoryID) async* {
-    var query = _getEventsCollection();
-    if (categoryID != null) {
-      query.where("categoryID", isEqualTo: categoryID);
-    }
+    var collectionReference = _getEventsCollection();
 
-    query
+    var query = collectionReference
         .orderBy('date', descending: false)
         .orderBy('time', descending: false);
 
+    if (categoryID != null) {
+      query = query.where("categoryID", isEqualTo: categoryID);
+    }
+
     var collectionRef = query.snapshots();
 
-    yield* collectionRef.map((snapshot) =>
-        snapshot.docs.map((snapshot) => snapshot.data()).toList());
+    yield* collectionRef.map((event) =>
+        event.docs.map((snapshot) => snapshot.data()).toList());
   }
 }

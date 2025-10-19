@@ -1,5 +1,6 @@
 import 'package:evently/database/UsersDao.dart';
 import 'package:evently/database/model/AppUser.dart';
+import 'package:evently/database/model/Event.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -95,6 +96,15 @@ class AuthenticationProvider extends ChangeNotifier {
     _fbAuthUser = null;
     _databaseUser = null;
     notifyListeners();
+  }
+
+  bool isFavorite(Event event) {
+    return _databaseUser?.favorites.contains(event.id) ?? false;
+  }
+
+  void updateFavorites(List<String> favorites) {
+    _databaseUser?.favorites = favorites;
+    //notifyListeners();
   }
 
 }

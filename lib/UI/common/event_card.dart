@@ -1,13 +1,21 @@
 import 'package:evently/UI/extensions/date_time_extension.dart';
+import 'package:evently/UI/provider/AuthenticationProvider.dart';
+import 'package:evently/database/UsersDao.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../database/model/Event.dart';
 import '../design/design.dart';
 
-class EventCard extends StatelessWidget {
+class EventCard extends StatefulWidget {
   final Event event;
   const EventCard(this.event, {super.key});
 
+  @override
+  State<EventCard> createState() => _EventCardState();
+}
+
+class _EventCardState extends State<EventCard> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.sizeOf(context);
@@ -19,7 +27,7 @@ class EventCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: AppColors.primary),
         image: DecorationImage(
-          image: AssetImage(event.getCategoryImage()),
+          image: AssetImage(widget.event.getCategoryImage()),
           fit: BoxFit.cover,
         ),
       ),
@@ -34,12 +42,12 @@ class EventCard extends StatelessWidget {
             ),
             child: Column(
               children: [
-                Text("${event.date?.day}", style: Theme
+                Text("${widget.event.date?.day}", style: Theme
                     .of(context)
                     .textTheme
                     .titleLarge),
                 SizedBox(height: 4),
-                Text(event.date?.formatMonth() ?? " ", style: Theme
+                Text(widget.event.date?.formatMonth() ?? " ", style: Theme
                     .of(context)
                     .textTheme
                     .titleLarge),
@@ -59,15 +67,25 @@ class EventCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  event.description ?? " ",
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  widget.event.description ?? " ",
+                  style: Theme
+                      .of(context)
+                      .textTheme
+                      .bodyMedium
+                      ?.copyWith(
                     fontSize: 14,
                     // fontFamily: GoogleFonts.inter().fontFamily
                   ),
                 ),
                 IconButton(
-                  onPressed: () {},
-                  icon: Icon(
+                  onPressed: () {
+                    toggleFavorites(widget.event);
+                  },
+                  icon: widget.event.isFav ? Icon(
+                    Icons.favorite,
+                    size: 24,
+                    color: AppColors.primary,
+                  ) : Icon(
                     Icons.favorite_border_rounded,
                     size: 24,
                     color: AppColors.primary,
@@ -79,5 +97,22 @@ class EventCard extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void toggleFavorites(Event event) async {
+    AuthenticationProvider provider = Provider.of<AuthenticationProvider>(
+        context, listen: false);
+    var user = provider.getUser();
+    var isFav = provider.isFavorite(event);
+    if (isFav) {
+      user = await UsersDao.removeFromFavorite(provider.getUser()!, event.id!);
+    }
+    else {
+      user = await UsersDao.addToFavorite(provider.getUser()!, event.id!);
+    }
+    provider.updateFavorites(user.favorites);
+    setState(() {
+      widget.event.isFav = !isFav;
+    });
   }
 }
