@@ -21,13 +21,21 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int currentTabIndex = 0;
   int currentBottomNavIndex = 0;
-  List<Widget> taps = [
-    HomeTab(),
-    MapsTab(),
-    Container(),
-    FavoriteTab(),
-    ProfileTab()
-  ];
+  List<Category> allCategories = Category.getAllCategories();
+  late List<Widget> taps;
+
+  @override
+  void initState() {
+    super.initState();
+    taps = [
+      HomeTab(allCategories[currentTabIndex]),
+      MapsTab(),
+      Container(),
+      FavoriteTab(),
+      ProfileTab()
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
     AuthenticationProvider provider = Provider.of<AuthenticationProvider>(
@@ -126,7 +134,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     .primary
             )
             , child: EventsTabs(
-              Category.getAllCategories()
+              allCategories
               , currentTabIndex,
                   (index, category) {
                 setState(() {

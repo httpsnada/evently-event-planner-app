@@ -6,7 +6,6 @@ import '../design/design.dart';
 
 class EventCard extends StatelessWidget {
   final Event event;
-
   const EventCard(this.event, {super.key});
 
   @override

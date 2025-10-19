@@ -252,7 +252,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
         description: descriptionController.text,
         date: selectedDate,
         time: selectedTime?.toDateTime(),
-        category: categories[selectedTabIndex].toString(),
+        categoryID: categories[selectedTabIndex].id,
         creatorUserId: authProvider
             .getUser()
             ?.id

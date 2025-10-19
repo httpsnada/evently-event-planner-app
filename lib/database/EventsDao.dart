@@ -22,9 +22,33 @@ class EventsDao {
     await doc.set(event);
   }
 
-  static Future<List<Event>> getEvents() async {
-    var collectionRef = await _getEventsCollection().get();
+  static Future<List<Event>> getEvents(int? categoryID) async {
+    var query = await _getEventsCollection();
+    if (categoryID != null) {
+      query.where("categoryID", isEqualTo: categoryID);
+    }
+    query.orderBy('date', descending: false)
+        .orderBy('time', descending: false);
+
+    var collectionRef = await query.get();
 
     return collectionRef.docs.map((snapshot) => snapshot.data()).toList();
+  }
+
+
+  static Stream<List<Event>> getRealTimeEvents(int? categoryID) async* {
+    var query = _getEventsCollection();
+    if (categoryID != null) {
+      query.where("categoryID", isEqualTo: categoryID);
+    }
+
+    query
+        .orderBy('date', descending: false)
+        .orderBy('time', descending: false);
+
+    var collectionRef = query.snapshots();
+
+    yield* collectionRef.map((snapshot) =>
+        snapshot.docs.map((snapshot) => snapshot.data()).toList());
   }
 }

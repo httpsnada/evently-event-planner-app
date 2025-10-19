@@ -1,9 +1,12 @@
 import 'package:evently/UI/common/event_card.dart';
 import 'package:evently/database/EventsDao.dart';
+import 'package:evently/database/model/Category.dart';
 import 'package:flutter/material.dart';
 
 class HomeTab extends StatelessWidget {
-  const HomeTab({super.key});
+  Category selectedCategory;
+
+  HomeTab(this.selectedCategory, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -13,8 +16,12 @@ class HomeTab extends StatelessWidget {
       child: Column(
         children: [
           Expanded(
-            child: FutureBuilder(
-                future: EventsDao.getEvents(), builder: (context, snapshot) {
+            child: StreamBuilder(
+                stream: EventsDao.getRealTimeEvents(
+                    selectedCategory.id != 0 ? selectedCategory
+                        .id // a specific category is selected
+                        : null // all categories tab
+                ), builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(child: CircularProgressIndicator(),);
               }

@@ -9,7 +9,7 @@ class Event {
   String? description;
   DateTime? date;
   DateTime? time;
-  String? category;
+  int? categoryID;
 
   Event({
     this.id,
@@ -18,7 +18,7 @@ class Event {
     this.description,
     this.date,
     this.time,
-    this.category,
+    this.categoryID,
   });
 
   String getMonthName(DateTime? date) {
@@ -42,17 +42,17 @@ class Event {
   }
 
   String getCategoryImage() {
-    switch (category?.toLowerCase()) {
-      case "Sports":
+    switch (categoryID) {
+      case 1:
         return AppImages.sports;
 
-      case "Birthday":
+      case 2:
         return AppImages.birthday;
 
-      case "Gaming":
+      case 3:
         return AppImages.gaming;
 
-      case "Workshop":
+      case 4:
         return AppImages.workshop;
     }
     return "";
@@ -66,7 +66,7 @@ class Event {
       'description': description,
       'date': date?.millisecondsSinceEpoch,
       'time': time?.millisecondsSinceEpoch,
-      'category': category,
+      'categoryID': categoryID,
     };
   }
 
@@ -78,7 +78,7 @@ class Event {
       description: map?['description'],
       date: DateTime.fromMillisecondsSinceEpoch(map?['date']),
       time: DateTime.fromMillisecondsSinceEpoch(map?['time']),
-      category: map?['category'],
+      categoryID: map?['categoryID'],
     );
   }
 }
