@@ -1,8 +1,6 @@
-import 'package:evently/UI/common/events_tabs.dart';
 import 'package:evently/UI/provider/AuthenticationProvider.dart';
 import 'package:evently/UI/screens/tabs/home_tab.dart';
 import 'package:evently/UI/screens/tabs/maps_tab.dart';
-import 'package:evently/database/model/Category.dart';
 import 'package:evently/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -19,16 +17,14 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int currentTabIndex = 0;
   int currentBottomNavIndex = 0;
-  List<Category> allCategories = Category.getAllCategories();
   late List<Widget> taps;
 
   @override
   void initState() {
     super.initState();
     taps = [
-      HomeTab(allCategories[currentTabIndex]),
+      HomeTab(),
       MapsTab(),
       Container(),
       FavoriteTab(),
@@ -122,29 +118,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
       body: Column(
         children: [
-          Container(
-            decoration: BoxDecoration(
-                borderRadius: BorderRadiusDirectional.only(
-                  bottomStart: Radius.circular(16),
-                  bottomEnd: Radius.circular(16),
-                ),
-                color: Theme
-                    .of(context)
-                    .colorScheme
-                    .primary
-            )
-            , child: EventsTabs(
-              allCategories
-              , currentTabIndex,
-                  (index, category) {
-                setState(() {
-                  currentTabIndex = index;
-                });
-              }),
-          ),
-          Expanded(child: HomeTab(
-              allCategories[currentTabIndex]
-          ),)
+          Expanded(child: taps[currentBottomNavIndex])
         ],
       ),
 

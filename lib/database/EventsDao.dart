@@ -24,11 +24,30 @@ class EventsDao {
 
   static Future<List<Event>> getEvents(int? categoryID) async {
     var query = await _getEventsCollection();
-    if (categoryID != null) {
+    if (categoryID != null && categoryID != 0) {
       query.where("categoryID", isEqualTo: categoryID);
     }
     query.orderBy('date', descending: false)
         .orderBy('time', descending: false);
+
+    var collectionRef = await query.get();
+
+    return collectionRef.docs.map((snapshot) => snapshot.data()).toList();
+  }
+
+  static Future<List<Event>> getFavorites(int? categoryID
+      , List<String> eventIds) async {
+    var collectionReference = await _getEventsCollection();
+
+    var query = collectionReference
+        .orderBy('date', descending: false)
+        .orderBy('time', descending: false);
+
+    if (eventIds.isNotEmpty == true) {
+      query = query.where(FieldPath.documentId, whereIn: eventIds);
+    }
+
+    query = query.where("categoryID", isEqualTo: categoryID);
 
     var collectionRef = await query.get();
 
@@ -43,7 +62,7 @@ class EventsDao {
         .orderBy('date', descending: false)
         .orderBy('time', descending: false);
 
-    if (categoryID != null) {
+    if (categoryID != null && categoryID != 0) {
       query = query.where("categoryID", isEqualTo: categoryID);
     }
 
