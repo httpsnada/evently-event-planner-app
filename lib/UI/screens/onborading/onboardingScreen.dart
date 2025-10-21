@@ -86,15 +86,12 @@ class OnboradingScreen extends StatelessWidget {
                   ],
                 ),
                 Spacer(),
-                ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushNamed(
+                ElevatedButton(onPressed: () {
+                  Navigator.pushReplacementNamed(
                         context,
-                        AppRoutes.RegisterScreen.routeName,
+                    AppRoutes.AppOnboardingScreen.routeName,
                       );
-                    },
-                    child: Text(AppLocalizations.of(context)!.letsStart))
-
+                }, child: Text(AppLocalizations.of(context)!.letsStart))
               ],
             ),
           )),

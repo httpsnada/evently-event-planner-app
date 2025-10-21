@@ -19,6 +19,9 @@ class AppImages {
   static const String sports = "assets/images/Sport.jpg";
   static const String workshop = "assets/images/Workshop.jpg";
   static const String branding = "assets/images/branding.png";
+  static const String onboarding01 = "assets/images/o1.png";
+  static const String onboarding02 = "assets/images/o2.png";
+  static const String onboarding03 = "assets/images/o3.png";
 }
 
 class AppIcons {

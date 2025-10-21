@@ -6,6 +6,7 @@ import 'package:evently/UI/provider/ThemeProvider.dart';
 import 'package:evently/UI/screens/AddEvent/AddEventScreen.dart';
 import 'package:evently/UI/screens/home/HomeScreen.dart';
 import 'package:evently/UI/screens/login/LoginScreen.dart';
+import 'package:evently/UI/screens/onborading/AppOnboardingScreens.dart';
 import 'package:evently/UI/screens/onborading/onboardingScreen.dart';
 import 'package:evently/UI/screens/register/RegisterScreen.dart';
 import 'package:evently/UI/screens/splash/Splash_Screen.dart';
@@ -54,6 +55,8 @@ class MyApp extends StatelessWidget {
       routes: {
         AppRoutes.SplashScreen.routeName: (context) => SplashScreen(),
         AppRoutes.OnboardingScreen.routeName: (context) => OnboradingScreen(),
+        AppRoutes.AppOnboardingScreen.routeName: (context) =>
+            AppOnboardingScreen(),
         AppRoutes.RegisterScreen.routeName: (context) => RegisterScreen(),
         AppRoutes.LoginScreen.routeName: (context) => LoginScreen(),
         AppRoutes.HomeScreen.routeName: (context) => HomeScreen(),
