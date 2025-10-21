@@ -3,6 +3,7 @@ import 'package:evently/UI/common/CustomFormField.dart';
 import 'package:evently/UI/common/LanguageSwitcher.dart';
 import 'package:evently/UI/design/design.dart';
 import 'package:evently/UI/provider/AuthenticationProvider.dart';
+import 'package:evently/firestore_service.dart';
 import 'package:evently/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -97,6 +98,38 @@ class _LoginScreenState extends State<LoginScreen> {
                               ],
                             )
                           : Text("Log in"),
+                    ),
+
+                    SizedBox(height: 12),
+                    OutlinedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.transparent,
+                        foregroundColor: AppColors.primary,
+                        textStyle: TextStyle(
+                          color: AppColors.primary,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                        ),
+                        side: BorderSide(
+                          color: AppColors.primary,
+                        ),
+                        padding: EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16)),
+                      ),
+                      onPressed: () async {
+                        var user = await FirestoreService.signInWithGoogle();
+                        print(user.user?.displayName);
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(AppImages.google, width: 24, fit: BoxFit
+                              .cover,),
+                          SizedBox(width: 8),
+                          Text("Log in with Google",),
+
+                        ],),
                     ),
                   ],
                 ),

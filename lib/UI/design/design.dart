@@ -22,6 +22,7 @@ class AppImages {
   static const String onboarding01 = "assets/images/o1.png";
   static const String onboarding02 = "assets/images/o2.png";
   static const String onboarding03 = "assets/images/o3.png";
+  static const String google = "assets/images/google.png";
 }
 
 class AppIcons {

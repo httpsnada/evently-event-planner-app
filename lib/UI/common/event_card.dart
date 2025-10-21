@@ -74,6 +74,7 @@ class _EventCardState extends State<EventCard> {
                       .bodyMedium
                       ?.copyWith(
                     fontSize: 14,
+                      color: AppColors.bg_dark
                     // fontFamily: GoogleFonts.inter().fontFamily
                   ),
                 ),
