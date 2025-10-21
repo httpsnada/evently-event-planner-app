@@ -8,6 +8,7 @@ import 'package:evently/UI/screens/home/HomeScreen.dart';
 import 'package:evently/UI/screens/login/LoginScreen.dart';
 import 'package:evently/UI/screens/onborading/onboardingScreen.dart';
 import 'package:evently/UI/screens/register/RegisterScreen.dart';
+import 'package:evently/UI/screens/splash/Splash_Screen.dart';
 import 'package:evently/l10n/app_localizations.dart';
 import 'package:evently/routes.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -47,9 +48,11 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       // home: OnboradingScreen(),
       initialRoute:
-      authProvider.isLoggedInBefore() ? AppRoutes.HomeScreen.routeName
-          : AppRoutes.OnboardingScreen.routeName,
+      // authProvider.isLoggedInBefore() ? AppRoutes.HomeScreen.routeName
+      //     : AppRoutes.OnboardingScreen.routeName,
+      AppRoutes.SplashScreen.routeName,
       routes: {
+        AppRoutes.SplashScreen.routeName: (context) => SplashScreen(),
         AppRoutes.OnboardingScreen.routeName: (context) => OnboradingScreen(),
         AppRoutes.RegisterScreen.routeName: (context) => RegisterScreen(),
         AppRoutes.LoginScreen.routeName: (context) => LoginScreen(),

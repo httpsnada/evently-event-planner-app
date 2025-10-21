@@ -1,5 +1,6 @@
 enum AppRoutes {
   OnboardingScreen("OnboardingScreen"),
+  SplashScreen("SplashScreen"),
   RegisterScreen("Register"),
   LoginScreen("Login"),
   HomeScreen("Home"),

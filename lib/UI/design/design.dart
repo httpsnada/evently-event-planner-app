@@ -18,6 +18,7 @@ class AppImages {
   static const String birthday = "assets/images/Birthday.jpg";
   static const String sports = "assets/images/Sport.jpg";
   static const String workshop = "assets/images/Workshop.jpg";
+  static const String branding = "assets/images/branding.png";
 }
 
 class AppIcons {
