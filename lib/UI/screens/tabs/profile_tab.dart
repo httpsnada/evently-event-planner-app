@@ -1,6 +1,8 @@
 import 'package:animated_custom_dropdown/custom_dropdown.dart';
+import 'package:evently/UI/provider/AuthenticationProvider.dart';
 import 'package:evently/UI/provider/LanguageProvider.dart';
 import 'package:evently/UI/provider/ThemeProvider.dart';
+import 'package:evently/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -27,7 +29,7 @@ class _ProfileTabState extends State<ProfileTab> {
   Widget build(BuildContext context) {
     var langProvider = Provider.of<LanguageProvider>(context);
     var themeProvider = Provider.of<ThemeProvider>(context);
-
+    var authProvider = Provider.of<AuthenticationProvider>(context);
 
     return Padding(
       padding: EdgeInsets.all(16.0),
@@ -163,6 +165,28 @@ class _ProfileTabState extends State<ProfileTab> {
                     )
                 )
             ),
+
+            Spacer(),
+
+            ElevatedButton(onPressed: () {
+              authProvider.logout();
+              Navigator.pushReplacementNamed(
+                context,
+                AppRoutes.OnboardingScreen.routeName,
+              );
+            },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xFFFF5659),
+                  padding: EdgeInsets.all(16),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Icon(Icons.logout, color: Colors.white,),
+                    SizedBox(width: 12,),
+                    Text("Log out")
+                  ],
+                ))
 
           ]
       ),

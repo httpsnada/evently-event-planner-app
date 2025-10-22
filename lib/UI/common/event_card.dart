@@ -66,16 +66,20 @@ class _EventCardState extends State<EventCard> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  widget.event.description ?? " ",
-                  style: Theme
-                      .of(context)
-                      .textTheme
-                      .bodyMedium
-                      ?.copyWith(
-                    fontSize: 14,
-                      color: AppColors.bg_dark
-                    // fontFamily: GoogleFonts.inter().fontFamily
+                Expanded(
+                  child: Text(
+                    widget.event.description ?? " ",
+                    style: Theme
+                        .of(context)
+                        .textTheme
+                        .bodyMedium
+                        ?.copyWith(
+                        fontSize: 14,
+                        color: AppColors.bg_dark
+                      // fontFamily: GoogleFonts.inter().fontFamily
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
                 IconButton(

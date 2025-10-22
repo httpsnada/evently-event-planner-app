@@ -39,161 +39,188 @@ class _AddEventScreenState extends State<AddEventScreen> {
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
+              spacing: 8,
               children: [
-                SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    spacing: 8,
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(24),
-                        child: Image(
-                          image: AssetImage(
-                            'assets/images/${categories[selectedTabIndex]
-                                .title}.jpg',
-                          ),
-                          height: 200,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-
-                      EventsTabs(
-                          categories, revered: true, selectedTabIndex, (index,
-                          category,) {
-                        setState(() {
-                          selectedTabIndex = index;
-                        });
-                      }),
-
-                      CustomFormField(
-                        controller: titleController,
-                        labelText: "Event Title",
-                        prefixIcon: Icons.edit_note_outlined,
-                        validator: (text) {
-                          if (text == null || text
-                              .trim()
-                              .isEmpty) {
-                            return "please enter a title";
-                          }
-                        },
-                      ),
-                      CustomFormField(
-                        controller: descriptionController,
-                        labelText: "Event Description",
-                        lines: 5,
-                        validator: (text) {
-                          if (text == null || text
-                              .trim()
-                              .isEmpty) {
-                            return "please enter a description";
-                          }
-                        },
-                      ),
-
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              Icon(FontAwesome.calendar),
-                              SizedBox(width: 6),
-                              Text(
-                                "Event Date",
-                                style: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .bodyMedium
-                                    ?.copyWith(
-                                  fontFamily:
-                                  GoogleFonts
-                                      .inter()
-                                      .fontFamily,
-                                ),
-                              ),
-                            ],
-                          ),
-
-                          TextButton(
-                            onPressed: () {
-                              chooseDate(context);
-                            },
-                            child: Text(
-                              selectedDate == null
-                                  ? "Choose Date"
-                                  : selectedDate?.format() ?? "",
-
-                              style: Theme
-                                  .of(context)
-                                  .textTheme
-                                  .bodyMedium
-                                  ?.copyWith(
-                                fontFamily: GoogleFonts
-                                    .inter()
-                                    .fontFamily,
-                                color: AppColors.primary,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              Icon(FontAwesome.clock),
-                              SizedBox(width: 6),
-                              Text(
-                                "Event Time",
-                                style: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .bodyMedium
-                                    ?.copyWith(
-                                  fontFamily:
-                                  GoogleFonts
-                                      .inter()
-                                      .fontFamily,
-                                ),
-                              ),
-                            ],
-                          ),
-
-                          TextButton(
-                            onPressed: () {
-                              chooseTime(context);
-                            },
-                            child: Text(
-                              selectedTime == null
-                                  ? "Choose Time"
-                                  : selectedTime?.format(context) ?? "",
-                              style: Theme
-                                  .of(context)
-                                  .textTheme
-                                  .bodyMedium
-                                  ?.copyWith(
-                                fontFamily: GoogleFonts
-                                    .inter()
-                                    .fontFamily,
-                                color: AppColors.primary,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(24),
+                  child: Image(
+                    image: AssetImage(
+                      'assets/images/${categories[selectedTabIndex]
+                          .title}.jpg',
+                    ),
+                    height: 200,
+                    fit: BoxFit.cover,
                   ),
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    createEvent();
+
+                SizedBox(height: 8),
+
+
+                EventsTabs(
+                    categories, revered: true, selectedTabIndex, (index,
+                    category,) {
+                  setState(() {
+                    selectedTabIndex = index;
+                  });
+                }),
+
+                CustomFormField(
+                  controller: titleController,
+                  labelText: "Event Title",
+                  prefixIcon: Icons.edit_note_outlined,
+                  validator: (text) {
+                    if (text == null || text
+                        .trim()
+                        .isEmpty) {
+                      return "please enter a title";
+                    }
                   },
-                  child: Text("Add Event"),
                 ),
+                CustomFormField(
+                  controller: descriptionController,
+                  labelText: "Event Description",
+                  lines: 5,
+                  validator: (text) {
+                    if (text == null || text
+                        .trim()
+                        .isEmpty) {
+                      return "please enter a description";
+                    }
+                  },
+                ),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(FontAwesome.calendar),
+                        SizedBox(width: 6),
+                        Text(
+                          "Event Date",
+                          style: Theme
+                              .of(context)
+                              .textTheme
+                              .bodyMedium
+                              ?.copyWith(
+                            fontFamily:
+                            GoogleFonts
+                                .inter()
+                                .fontFamily,
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    TextButton(
+                      onPressed: () {
+                        chooseDate(context);
+                      },
+                      child: Text(
+                        selectedDate == null
+                            ? "Choose Date"
+                            : selectedDate?.format() ?? "",
+
+                        style: Theme
+                            .of(context)
+                            .textTheme
+                            .bodyMedium
+                            ?.copyWith(
+                          fontFamily: GoogleFonts
+                              .inter()
+                              .fontFamily,
+                          color: AppColors.primary,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(FontAwesome.clock),
+                        SizedBox(width: 6),
+                        Text(
+                          "Event Time",
+                          style: Theme
+                              .of(context)
+                              .textTheme
+                              .bodyMedium
+                              ?.copyWith(
+                            fontFamily:
+                            GoogleFonts
+                                .inter()
+                                .fontFamily,
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    TextButton(
+                      onPressed: () {
+                        chooseTime(context);
+                      },
+                      child: Text(
+                        selectedTime == null
+                            ? "Choose Time"
+                            : selectedTime?.format(context) ?? "",
+                        style: Theme
+                            .of(context)
+                            .textTheme
+                            .bodyMedium
+                            ?.copyWith(
+                          fontFamily: GoogleFonts
+                              .inter()
+                              .fontFamily,
+                          color: AppColors.primary,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+
+                // TextFormField(
+                //   readOnly: true,
+                //   enabled: false,
+                //   decoration: InputDecoration(
+                //     labelText: "Choose Event Location",
+                //     prefixIcon: Container(
+                //       width: 40,
+                //         height: 40,
+                //         decoration: BoxDecoration(
+                //           color: AppColors.primary,
+                //           borderRadius: BorderRadius.circular(8),
+                //         ),
+                //         child: Icon(Icons.my_location,color: Colors.white,size: 24, )),
+                //         suffixIcon: IconButton(
+                //         onPressed: (){}
+                //         ,icon: Icon(Icons.arrow_forward_ios_outlined , color: AppColors.primary, size: 24,)),
+                //         labelStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                //        color: AppColors.primary,
+                //     ),
+                //     border: OutlineInputBorder(
+                //       borderSide: BorderSide(color: Theme.of(context).colorScheme.primary),
+                //       borderRadius: BorderRadius.circular(16),
+                //     ),
+                //     contentPadding: EdgeInsets.all(20),
+                //   ),
+                // )
+
               ],
             ),
           ),
+        ),
+      ),
+      bottomNavigationBar: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: ElevatedButton(
+          onPressed: () {
+            createEvent();
+          },
+          child: Text("Add Event"),
         ),
       ),
     );
