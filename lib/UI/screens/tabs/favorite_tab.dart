@@ -1,3 +1,4 @@
+import 'package:evently/UI/common/CustomFormField.dart';
 import 'package:evently/UI/common/event_card.dart';
 import 'package:evently/UI/provider/AuthenticationProvider.dart';
 import 'package:evently/database/EventsDao.dart';
@@ -46,6 +47,11 @@ class _HomeTabState extends State<FavoriteTab> {
             });
           }),
         ),
+
+        Padding(padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+            child: CustomFormField(
+              labelText: "Search for event", prefixIcon: Icons.search,)),
+        
 
         Expanded(
           child: FutureBuilder(
