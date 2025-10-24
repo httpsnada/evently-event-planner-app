@@ -86,7 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   SizedBox(width: 4),
                   Text(
-                    "Cairo , Egypt",
+                    "Sohag , Egypt",
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w300,
