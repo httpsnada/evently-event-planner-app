@@ -1,8 +1,8 @@
-import 'package:evently/UI/common/CustomFormField.dart';
 import 'package:evently/UI/common/event_card.dart';
 import 'package:evently/UI/provider/AuthenticationProvider.dart';
 import 'package:evently/database/EventsDao.dart';
 import 'package:evently/database/model/Category.dart';
+import 'package:evently/database/model/Event.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -20,12 +20,15 @@ class _HomeTabState extends State<FavoriteTab> {
 
   int currentTabIndex = 0;
   List<Category> allCategories = Category.getAllCategories();
+  final TextEditingController _searchController = TextEditingController();
+  List<Event>? allFavEvents = [];
+  List<Event>? filteredEvents = [];
+
 
   @override
   Widget build(BuildContext context) {
     AuthenticationProvider provider = Provider.of<AuthenticationProvider>(
         context, listen: false);
-    Size size = MediaQuery.sizeOf(context);
     return Column(
       children: [
 
@@ -48,13 +51,37 @@ class _HomeTabState extends State<FavoriteTab> {
           }),
         ),
 
-        Padding(padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-            child: CustomFormField(
-              labelText: "Search for event", prefixIcon: Icons.search,)),
-        
+        SizedBox(height: 8,),
+
+
+        Padding(
+          padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+          child: TextFormField(
+            controller: _searchController,
+            decoration: InputDecoration(
+              labelText: "Search for event",
+              prefixIcon: Icon(Icons.search),
+              border:
+              OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+            ),
+            onChanged: (value) {
+              setState(() {
+                if (value.isEmpty) {
+                  filteredEvents = List.from(allFavEvents!);
+                } else {
+                  filteredEvents = allFavEvents!
+                      .where((event) =>
+                      event.title!.toLowerCase()
+                          .contains(value.toLowerCase()))
+                      .toList();
+                }
+              });
+            },
+          ),
+        ),
 
         Expanded(
-          child: FutureBuilder(
+          child: FutureBuilder<List<Event>>(
               future: EventsDao.getFavorites(
                   allCategories[currentTabIndex].id != 0
                       ? allCategories[currentTabIndex]
@@ -81,17 +108,46 @@ class _HomeTabState extends State<FavoriteTab> {
                   .textTheme
                   .bodyMedium,),);
             }
+
+
+            allFavEvents = snapshot.data ?? [];
+            if (_searchController.text.isEmpty) {
+              filteredEvents = List.from(allFavEvents!);
+            } else {
+              filteredEvents = allFavEvents
+              !.where((e) =>
+                  e.title
+                  !.toLowerCase()
+                      .contains(_searchController.text.toLowerCase()))
+                  .toList();
+            }
+
+            if (filteredEvents!.isEmpty) {
+              return Center(
+                child: Text(
+                  "No Events Found",
+                  style: Theme
+                      .of(context)
+                      .textTheme
+                      .bodyMedium,
+                ),
+              );
+            }
+
+
             return Padding(
               padding: const EdgeInsets.all(16.0),
               child: ListView.separated(
                   itemBuilder: (context, index) {
-                    var event = events![index];
+                    if (index >= filteredEvents!.length) return SizedBox();
+                    var event = filteredEvents![index];
                     var isFavorite = provider.isFavorite(event);
                     event.isFav = isFavorite;
-                    return EventCard(events[index]);
+                    // return EventCard(events[index]);
+                    return EventCard(event);
                   },
                   separatorBuilder: (context, index) => SizedBox(height: 16),
-                  itemCount: events.length ?? 0),
+                  itemCount: filteredEvents!.length ?? 0),
             );
           }),
         ),
