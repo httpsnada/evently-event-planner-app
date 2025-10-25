@@ -68,7 +68,7 @@ class _EventCardState extends State<EventCard> {
               children: [
                 Expanded(
                   child: Text(
-                    widget.event.description ?? " ",
+                    widget.event.title ?? " ",
                     style: Theme
                         .of(context)
                         .textTheme

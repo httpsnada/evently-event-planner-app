@@ -4,11 +4,13 @@ import 'package:evently/UI/design/design.dart';
 import 'package:evently/UI/extensions/context_extention.dart';
 import 'package:evently/UI/extensions/date_time_extension.dart';
 import 'package:evently/UI/provider/AuthenticationProvider.dart';
+import 'package:evently/UI/screens/select_location/select_location.dart';
 import 'package:evently/database/EventsDao.dart';
 import 'package:evently/database/model/Category.dart';
 import 'package:evently/database/model/Event.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:provider/provider.dart';
 
@@ -24,6 +26,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
   List<Category> categories = Category.getAllCategories(includeAll: false);
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
+  double? _eventLatitude;
+  double? _eventLongitude;
 
   var formKey = GlobalKey<FormState>();
 
@@ -45,8 +49,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                   borderRadius: BorderRadius.circular(24),
                   child: Image(
                     image: AssetImage(
-                      'assets/images/${categories[selectedTabIndex]
-                          .title}.jpg',
+                      'assets/images/${categories[selectedTabIndex].title}.jpg',
                     ),
                     height: 200,
                     fit: BoxFit.cover,
@@ -55,9 +58,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
 
                 SizedBox(height: 8),
 
-
-                EventsTabs(
-                    categories, revered: true, selectedTabIndex, (index,
+                EventsTabs(categories, revered: true, selectedTabIndex, (index,
                     category,) {
                   setState(() {
                     selectedTabIndex = index;
@@ -103,8 +104,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                               .textTheme
                               .bodyMedium
                               ?.copyWith(
-                            fontFamily:
-                            GoogleFonts
+                            fontFamily: GoogleFonts
                                 .inter()
                                 .fontFamily,
                           ),
@@ -150,8 +150,7 @@ class _AddEventScreenState extends State<AddEventScreen> {
                               .textTheme
                               .bodyMedium
                               ?.copyWith(
-                            fontFamily:
-                            GoogleFonts
+                            fontFamily: GoogleFonts
                                 .inter()
                                 .fontFamily,
                           ),
@@ -182,6 +181,62 @@ class _AddEventScreenState extends State<AddEventScreen> {
                   ],
                 ),
 
+                OutlinedButton(
+                  onPressed: () async {
+                    final picked = await Navigator.push<LatLng>(
+                      context,
+                      MaterialPageRoute(builder: (_) => MapSelectPage()),
+                    );
+                    if (picked != null) {
+                      setState(() {
+                        _eventLatitude = picked.latitude;
+                        _eventLongitude = picked.longitude;
+                      });
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                      foregroundColor: AppColors.primary,
+                      backgroundColor: Colors.transparent,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      padding: EdgeInsets.all(8)
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            width: 40,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              color: AppColors.primary,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Icon(
+                              Icons.my_location,
+                              color: Colors.white,
+                              size: 24,
+                            ),
+                          ),
+                          SizedBox(width: 8),
+                          Text(
+                              _eventLatitude == null ? "Choose Event Location"
+                                  : '${_eventLatitude!.toStringAsFixed(
+                                  4)}, ${_eventLongitude!.toStringAsFixed(4)}'),
+                        ],
+                      ),
+                      Icon(
+                        Icons.arrow_forward_ios_outlined,
+                        color: AppColors.primary,
+                        size: 24,
+                      ),
+
+                    ],
+                  ),
+                ),
+
                 // TextFormField(
                 //   readOnly: true,
                 //   enabled: false,
@@ -196,7 +251,19 @@ class _AddEventScreenState extends State<AddEventScreen> {
                 //         ),
                 //         child: Icon(Icons.my_location,color: Colors.white,size: 24, )),
                 //         suffixIcon: IconButton(
-                //         onPressed: (){}
+                //         onPressed: () async {
+                //           final picked = await Navigator.push<LatLng>(
+                //             context,
+                //             MaterialPageRoute(builder: (_) => MapSelectPage()),
+                //           );
+                //           if (picked != null) {
+                //             setState(() {
+                //               _eventLatitude = picked.latitude;
+                //               _eventLongitude = picked.longitude;
+                //             });
+                //           }
+                //         }
+                //
                 //         ,icon: Icon(Icons.arrow_forward_ios_outlined , color: AppColors.primary, size: 24,)),
                 //         labelStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 //        color: AppColors.primary,
@@ -208,7 +275,6 @@ class _AddEventScreenState extends State<AddEventScreen> {
                 //     contentPadding: EdgeInsets.all(20),
                 //   ),
                 // )
-
               ],
             ),
           ),
@@ -273,7 +339,9 @@ class _AddEventScreenState extends State<AddEventScreen> {
     }
     //show loading dialog
     var authProvider = Provider.of<AuthenticationProvider>(
-        context, listen: false);
+      context,
+      listen: false,
+    );
     var event = Event(
         title: titleController.text,
         description: descriptionController.text,
@@ -282,19 +350,23 @@ class _AddEventScreenState extends State<AddEventScreen> {
         categoryID: categories[selectedTabIndex].id,
         creatorUserId: authProvider
             .getUser()
-            ?.id
+            ?.id,
+        latitude: _eventLatitude,
+        longitude: _eventLongitude
     );
     context.showLoadingDialog(
-        message: "Creating Event ...", isDismissable: false);
+      message: "Creating Event ...",
+      isDismissable: false,
+    );
     await EventsDao.addEvent(event);
     //hide loading dialog
     Navigator.pop(context);
-    context.showMessage("Event created successfully ...",
-        posActionText: "Ok",
-        onPosActionClick: () {
-          Navigator.pop(context);
-        });
+    context.showMessage(
+      "Event created successfully ...",
+      posActionText: "Ok",
+      onPosActionClick: () {
+        Navigator.pop(context);
+      },
+    );
   }
-
-
 }

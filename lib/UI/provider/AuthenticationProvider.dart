@@ -76,6 +76,9 @@ class AuthenticationProvider extends ChangeNotifier {
       );
       // retrieve user
       AppUser? user = await UsersDao.getUserById(credential.user?.uid);
+      _databaseUser = user;
+      _fbAuthUser = credential.user;
+      notifyListeners();
 
       return AuthResponse(success: true, credential: credential, user: user);
     } on FirebaseAuthException catch (e) {

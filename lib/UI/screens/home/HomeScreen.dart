@@ -65,6 +65,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   color: Colors.white,
                 ),
               ),
+
+              user?.name?.isEmpty == false ?
               Text(
                 user?.name ?? "",
                 style: Theme
@@ -75,7 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   color: Colors.white,
                   fontSize: 24,
                 ),
-              ),
+              ) : CircularProgressIndicator(),
 
               Row(
                 children: [

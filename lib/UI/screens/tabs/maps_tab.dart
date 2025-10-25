@@ -1,64 +1,101 @@
-import 'package:evently/UI/extensions/context_extention.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 
+import '../../../database/model/Event.dart';
+
 class MapsTab extends StatefulWidget {
-  const MapsTab({super.key});
+  const MapsTab({Key? key}) : super(key: key);
 
   @override
   State<MapsTab> createState() => _MapsTabState();
 }
 
 class _MapsTabState extends State<MapsTab> {
+  GoogleMapController? _controller;
+  LatLng? _currentLocation;
+  Set<Marker> _markers = {};
+  Event? _selectedEvent;
   String? mapStyle;
-  late GoogleMapController mapController;
-  Location location = Location();
-  LatLng? initLocation;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    initializeMap();
+    _loadEventsAndLocation();
     loadMapStyle();
   }
 
   @override
   Widget build(BuildContext context) {
+    final LatLng initialPosition =
+    _markers.isNotEmpty && _markers.first.position != null
+        ? _markers.first.position
+        : (_currentLocation ?? const LatLng(26.55707, 31.68850));
+
     return Container(
-      child: initLocation == null
-          ? Center(child: CircularProgressIndicator())
-          : GoogleMap(
-              initialCameraPosition: CameraPosition(
-                target: initLocation ?? LatLng(0, 0),
-                zoom: 10,
-              ),
-              style: mapStyle,
-              // polylines: {
-              //   Polyline(
-              //     polylineId: PolylineId("1"),
-              //     color: Colors.white,
-              //     width: 3,
-              //     points: const [
-              //       LatLng(26.48675, 31.81507),
-              //       LatLng(26.64643, 31.71803),
-              //       LatLng(26.59732, 31.59374),
-              //     ],
-              //   ),
-              // },
-              markers: {
-                Marker(
-                  markerId: MarkerId('1'),
-                  position: LatLng(26.59732, 31.59374),
-                ),
-              },
-              myLocationEnabled: true,
-              onMapCreated: (controller) {
-                mapController = controller;
-              },
+      child: Stack(
+        children: [
+          GoogleMap(
+            initialCameraPosition: CameraPosition(
+              target: initialPosition,
+              zoom: 10,
             ),
+            style: mapStyle,
+            myLocationEnabled: true,
+            onMapCreated: (controller) {
+              _controller = controller;
+            },
+            markers: _markers,
+          ),
+
+
+          if (_selectedEvent != null)
+            Positioned(
+              left: 16,
+              right: 16,
+              bottom: 20,
+              child: AnimatedOpacity(
+                duration: const Duration(milliseconds: 300),
+                opacity: 1.0,
+                child: Card(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
+                  elevation: 6,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          _selectedEvent!.title!,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 16),
+                        ),
+                        const SizedBox(height: 12),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: TextButton(
+                            onPressed: () {
+                              setState(() {
+                                _selectedEvent = null;
+                              });
+                            },
+                            child: const Text('Close'),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+
+          if (_currentLocation == null && _markers.isEmpty)
+            const Center(child: CircularProgressIndicator()),
+        ],
+      ),
     );
   }
 
@@ -71,34 +108,51 @@ class _MapsTabState extends State<MapsTab> {
     });
   }
 
-  Future<void> initializeMap() async {
-    // 1 - check if location services are enabled
-    bool servicesEnabled = await location.serviceEnabled();
-    if (!servicesEnabled) {
-      servicesEnabled = await location.requestService();
-      if (!servicesEnabled) {
-        //error dialog
-        context.showMessage("Please enable location services");
-        return;
+  Future<void> _loadEventsAndLocation() async {
+    final location = Location();
+
+    // Request permission and get user location
+    PermissionStatus permission = await location.requestPermission();
+    if (permission == PermissionStatus.granted) {
+      final pos = await location.getLocation();
+      setState(() {
+        _currentLocation = LatLng(pos.latitude!, pos.longitude!);
+      });
+    }
+
+    // Fetch events from Firestore
+    final snapshot = await FirebaseFirestore.instance
+        .collection('events')
+        .get();
+
+    final events = snapshot.docs.map((doc) {
+      return Event.fromMap(doc.data());
+    }).toList();
+
+    final markers = <Marker>{};
+    for (final e in events) {
+      if (e.latitude != null && e.longitude != null) {
+        markers.add(
+          Marker(
+            markerId: MarkerId('1'),
+            position: LatLng(e.latitude!, e.longitude!),
+            infoWindow: InfoWindow(title: e.title),
+            onTap: () {
+              setState(() {
+                _selectedEvent = e;
+              });
+            },
+          ),
+        );
       }
     }
 
-    // 2 - check permission states
-    PermissionStatus permission = await location.hasPermission();
-    if (permission == PermissionStatus.denied ||
-        permission == PermissionStatus.deniedForever) {
-      permission = await location.requestPermission();
-      if (permission != PermissionStatus.granted) {
-        //error dialog
-        context.showMessage("Please enable location services");
-        return;
-      }
-    }
-
-    // 3 - get user's location
-    var locationData = await location.getLocation();
     setState(() {
-      initLocation = LatLng(locationData.latitude!, locationData.longitude!);
+      _markers = markers;
     });
   }
+
 }
+
+
+

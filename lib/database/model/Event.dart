@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:evently/UI/design/design.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class Event {
   String? id;
@@ -8,6 +10,8 @@ class Event {
   DateTime? date;
   DateTime? time;
   int? categoryID;
+  final double? latitude;
+  final double? longitude;
   bool isFav = false;
 
   Event({
@@ -18,6 +22,8 @@ class Event {
     this.date,
     this.time,
     this.categoryID,
+    this.latitude,
+    this.longitude,
   });
 
   String getMonthName(DateTime? date) {
@@ -58,7 +64,7 @@ class Event {
   }
 
   Map<String, dynamic> toMap() {
-    return {
+    final map = <String, dynamic>{
       'id': id,
       'creatorUserId': creatorUserId,
       'title': title,
@@ -67,9 +73,41 @@ class Event {
       'time': time?.millisecondsSinceEpoch,
       'categoryID': categoryID,
     };
+
+    if (latitude != null && longitude != null) {
+      map['latitude'] = latitude;
+      map['longitude'] = longitude;
+      map['geo_point'] = GeoPoint(latitude!, longitude!); // Firestore geo
+    }
+
+    return map;
   }
 
   factory Event.fromMap(Map<String, dynamic>? map) {
+    final data = map ?? <String, dynamic>{};
+
+    final geo = data['geo_point'];
+    GeoPoint? gp;
+    if (geo is GeoPoint) {
+      gp = geo;
+    } else {
+      gp = null;
+    }
+
+    double? lat;
+    double? lng;
+
+    if (gp != null) {
+      lat = gp.latitude;
+      lng = gp.longitude;
+    } else {
+      final rawLat = data['latitude'];
+      final rawLng = data['longitude'];
+
+      if (rawLat is num) lat = rawLat.toDouble();
+      if (rawLng is num) lng = rawLng.toDouble();
+    }
+
     return Event(
       id: map?['id'],
       creatorUserId: map?['creatorUserId'],
@@ -78,6 +116,12 @@ class Event {
       date: DateTime.fromMillisecondsSinceEpoch(map?['date']),
       time: DateTime.fromMillisecondsSinceEpoch(map?['time']),
       categoryID: map?['categoryID'],
+      latitude: lat,
+      longitude: lng,
     );
   }
+
+  LatLng? get latLng => latitude != null && longitude != null
+      ? LatLng(latitude!, longitude!)
+      : null;
 }
