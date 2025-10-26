@@ -1,18 +1,28 @@
 import 'package:evently/UI/design/design.dart';
+import 'package:evently/UI/extensions/context_extention.dart';
 import 'package:evently/UI/extensions/date_time_extension.dart';
 import 'package:evently/UI/provider/AuthenticationProvider.dart';
+import 'package:evently/database/EventsDao.dart';
 import 'package:evently/database/model/Event.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
-class EventDetails extends StatelessWidget {
+class EventDetails extends StatefulWidget {
   EventDetails({super.key});
 
   @override
+  State<EventDetails> createState() => _EventDetailsState();
+}
+
+class _EventDetailsState extends State<EventDetails> {
+  @override
   Widget build(BuildContext context) {
-    Event event = ModalRoute.of(context)?.settings.arguments as Event;
+    Event event = ModalRoute
+        .of(context)
+        ?.settings
+        .arguments as Event;
     final double lat = event.latitude ?? 30.0444;
     final double lng = event.longitude ?? 31.2357;
     final LatLng initialPosition = LatLng(lat, lng);
@@ -20,7 +30,9 @@ class EventDetails extends StatelessWidget {
       context,
       listen: false,
     );
-    final currentUserId = authProvider.getUser()?.id;
+    final currentUserId = authProvider
+        .getUser()
+        ?.id;
     bool isCreator = (event.creatorUserId == currentUserId) ? true : false;
 
     final Set<Marker> markers = {};
@@ -39,24 +51,40 @@ class EventDetails extends StatelessWidget {
         centerTitle: true,
         actions: isCreator
             ? [
-                IconButton(
-                  onPressed: () {},
-                  icon: Icon(
-                    Icons.edit_outlined,
-                    size: 24,
-                    color: AppColors.primary,
-                  ),
-                ),
+          IconButton(
+            onPressed: () {
 
-                IconButton(
-                  onPressed: () {},
-                  icon: Icon(
-                    Icons.delete_outline,
-                    size: 24,
-                    color: Color(0xFFFF5659),
-                  ),
-                ),
-              ]
+            },
+            icon: Icon(
+              Icons.edit_outlined,
+              size: 24,
+              color: AppColors.primary,
+            ),
+          ),
+
+          IconButton(
+            onPressed: () {
+              context.showMessage(
+                  "You want to delete this event?",
+                  posActionText: "Delete",
+                  onPosActionClick: () async {
+                    await EventsDao().deleteEvent(event.id!);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                          content: Text('Event deleted successfully')),
+                    );
+                    Navigator.pop(context);
+                  },
+                  negActionText: "Cancel"
+              );
+            },
+            icon: Icon(
+              Icons.delete_outline,
+              size: 24,
+              color: Color(0xFFFF5659),
+            ),
+          ),
+        ]
             : null,
       ),
       body: Padding(
@@ -77,8 +105,14 @@ class EventDetails extends StatelessWidget {
 
               Text(
                 event.title ?? "",
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontFamily: GoogleFonts.inter().fontFamily,
+                style: Theme
+                    .of(context)
+                    .textTheme
+                    .titleLarge
+                    ?.copyWith(
+                  fontFamily: GoogleFonts
+                      .inter()
+                      .fontFamily,
                   fontSize: 24,
                 ),
               ),
@@ -114,7 +148,10 @@ class EventDetails extends StatelessWidget {
                       children: [
                         Text(
                           event.date?.formatFullDate() ?? "",
-                          style: Theme.of(context).textTheme.bodyMedium
+                          style: Theme
+                              .of(context)
+                              .textTheme
+                              .bodyMedium
                               ?.copyWith(color: AppColors.primary),
                         ),
 
@@ -122,7 +159,10 @@ class EventDetails extends StatelessWidget {
 
                         Text(
                           event.time?.formatTime() ?? "",
-                          style: Theme.of(context).textTheme.bodyMedium,
+                          style: Theme
+                              .of(context)
+                              .textTheme
+                              .bodyMedium,
                         ),
                       ],
                     ),
@@ -156,12 +196,18 @@ class EventDetails extends StatelessWidget {
                 children: [
                   Text(
                     "Description",
-                    style: Theme.of(context).textTheme.bodyMedium,
+                    style: Theme
+                        .of(context)
+                        .textTheme
+                        .bodyMedium,
                   ),
                   SizedBox(height: 8),
                   Text(
                     event.description ?? "",
-                    style: Theme.of(context).textTheme.bodyMedium,
+                    style: Theme
+                        .of(context)
+                        .textTheme
+                        .bodyMedium,
                   ),
                 ],
               ),
@@ -172,3 +218,4 @@ class EventDetails extends StatelessWidget {
     );
   }
 }
+

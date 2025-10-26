@@ -71,4 +71,19 @@ class EventsDao {
     yield* collectionRef.map((event) =>
         event.docs.map((snapshot) => snapshot.data()).toList());
   }
+
+
+  Future<void> deleteEvent(String id) async {
+    await _db.collection('events').doc(id).delete();
+    final users = await _db.collection('users').get();
+    for (final user in users.docs) {
+      final favs = List<String>.from(user['favorites'] ?? []);
+      if (favs.contains(id)) {
+        await user.reference.update({
+          'favorites': FieldValue.arrayRemove([id]),
+        });
+      }
+    }
+  }
+
 }

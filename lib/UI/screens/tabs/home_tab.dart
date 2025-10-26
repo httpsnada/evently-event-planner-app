@@ -87,11 +87,16 @@ class _HomeTabState extends State<HomeTab> {
                     var event = events![index];
                     var isFavorite = provider.isFavorite(event);
                     event.isFav = isFavorite;
-                    return EventCard(events[index],
+                    return EventCard(
+                      events[index],
                       onTap: () {
-                        Navigator.pushNamed(context,
-                            AppRoutes.EventDetails.routeName, arguments: event);
-                      },);
+                        Navigator.pushNamed(
+                          context,
+                          AppRoutes.EventDetails.routeName,
+                          arguments: event,
+                        );
+                      },
+                    );
                   },
                   separatorBuilder: (context, index) => SizedBox(height: 16),
                   itemCount: events?.length ?? 0,
