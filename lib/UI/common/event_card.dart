@@ -9,7 +9,9 @@ import '../design/design.dart';
 
 class EventCard extends StatefulWidget {
   final Event event;
-  const EventCard(this.event, {super.key});
+  final VoidCallback? onTap;
+
+  const EventCard(this.event, {super.key, this.onTap});
 
   @override
   State<EventCard> createState() => _EventCardState();
@@ -19,87 +21,90 @@ class _EventCardState extends State<EventCard> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.sizeOf(context);
-    return Container(
-      padding: EdgeInsets.all(8),
-      height: size.height * .25,
-      width: double.infinity,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.primary),
-        image: DecorationImage(
-          image: AssetImage(widget.event.getCategoryImage()),
-          fit: BoxFit.cover,
+    return InkWell(
+      onTap: widget.onTap,
+      child: Container(
+        padding: EdgeInsets.all(8),
+        height: size.height * .25,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: AppColors.primary),
+          image: DecorationImage(
+            image: AssetImage(widget.event.getCategoryImage()),
+            fit: BoxFit.cover,
+          ),
         ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Column(
+                children: [
+                  Text("${widget.event.date?.day}", style: Theme
+                      .of(context)
+                      .textTheme
+                      .titleLarge),
+                  SizedBox(height: 4),
+                  Text(widget.event.date?.formatMonth() ?? " ", style: Theme
+                      .of(context)
+                      .textTheme
+                      .titleLarge),
+                ],
+              ),
             ),
-            child: Column(
-              children: [
-                Text("${widget.event.date?.day}", style: Theme
-                    .of(context)
-                    .textTheme
-                    .titleLarge),
-                SizedBox(height: 4),
-                Text(widget.event.date?.formatMonth() ?? " ", style: Theme
-                    .of(context)
-                    .textTheme
-                    .titleLarge),
-              ],
-            ),
-          ),
 
-          Spacer(),
+            Spacer(),
 
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 8),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Text(
-                    widget.event.title ?? " ",
-                    style: Theme
-                        .of(context)
-                        .textTheme
-                        .bodyMedium
-                        ?.copyWith(
-                        fontSize: 14,
-                        color: AppColors.bg_dark
-                      // fontFamily: GoogleFonts.inter().fontFamily
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 8),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Text(
+                      widget.event.title ?? " ",
+                      style: Theme
+                          .of(context)
+                          .textTheme
+                          .bodyMedium
+                          ?.copyWith(
+                          fontSize: 14,
+                          color: AppColors.bg_dark
+                        // fontFamily: GoogleFonts.inter().fontFamily
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
                   ),
-                ),
-                IconButton(
-                  onPressed: () {
-                    toggleFavorites(widget.event);
-                  },
-                  icon: widget.event.isFav ? Icon(
-                    Icons.favorite,
-                    size: 24,
-                    color: AppColors.primary,
-                  ) : Icon(
-                    Icons.favorite_border_rounded,
-                    size: 24,
-                    color: AppColors.primary,
+                  IconButton(
+                    onPressed: () {
+                      toggleFavorites(widget.event);
+                    },
+                    icon: widget.event.isFav ? Icon(
+                      Icons.favorite,
+                      size: 24,
+                      color: AppColors.primary,
+                    ) : Icon(
+                      Icons.favorite_border_rounded,
+                      size: 24,
+                      color: AppColors.primary,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -5,6 +5,7 @@ enum AppRoutes {
   RegisterScreen("Register"),
   LoginScreen("Login"),
   HomeScreen("Home"),
+  EventDetails("EventDetails"),
   AddEventScreen("AddEvent");
 
   final String routeName;

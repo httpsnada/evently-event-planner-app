@@ -12,6 +12,16 @@ extension DateExtension on DateTime {
     final DateFormat customFormat = DateFormat('MMM');
     return customFormat.format(this);
   }
+
+  String formatFullDate() {
+    final DateFormat customFormat = DateFormat('d MMMM yyyy');
+    return customFormat.format(this);
+  }
+
+  String formatTime() {
+    final DateFormat customFormat = DateFormat('hh:mm a');
+    return customFormat.format(this);
+  }
 }
 
 extension TimeExtension on TimeOfDay {

@@ -3,6 +3,7 @@ import 'package:evently/UI/common/events_tabs.dart';
 import 'package:evently/UI/provider/AuthenticationProvider.dart';
 import 'package:evently/database/EventsDao.dart';
 import 'package:evently/database/model/Category.dart';
+import 'package:evently/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -86,7 +87,11 @@ class _HomeTabState extends State<HomeTab> {
                     var event = events![index];
                     var isFavorite = provider.isFavorite(event);
                     event.isFav = isFavorite;
-                    return EventCard(events[index]);
+                    return EventCard(events[index],
+                      onTap: () {
+                        Navigator.pushNamed(context,
+                            AppRoutes.EventDetails.routeName, arguments: event);
+                      },);
                   },
                   separatorBuilder: (context, index) => SizedBox(height: 16),
                   itemCount: events?.length ?? 0,
