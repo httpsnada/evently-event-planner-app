@@ -3,5 +3,12 @@
   "onboardingScreenSubtitle": "Choose your preferred theme and language to get started with a comfortable, tailored experience that suits your style.",
   "language": "Language",
   "theme": "Theme",
-  "letsStart": "Let's Start"
+  "letsStart": "Let's Start",
+  "welcomeBack": "Welcome Back ✨",
+  "location": "Sohag , Egypt",
+  "home": "Home",
+  "map": "Map",
+  "love": "Love",
+  "profile": "Profile",
+  "logout": "Logout"
 }

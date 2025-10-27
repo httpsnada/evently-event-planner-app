@@ -4,6 +4,7 @@ import 'package:evently/UI/extensions/date_time_extension.dart';
 import 'package:evently/UI/provider/AuthenticationProvider.dart';
 import 'package:evently/database/EventsDao.dart';
 import 'package:evently/database/model/Event.dart';
+import 'package:evently/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -17,14 +18,27 @@ class EventDetails extends StatefulWidget {
 }
 
 class _EventDetailsState extends State<EventDetails> {
+  Event? event;
+
   @override
-  Widget build(BuildContext context) {
-    Event event = ModalRoute
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    event ??= ModalRoute
         .of(context)
         ?.settings
         .arguments as Event;
-    final double lat = event.latitude ?? 30.0444;
-    final double lng = event.longitude ?? 31.2357;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (event == null) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    final double lat = event!.latitude ?? 30.0444;
+    final double lng = event!.longitude ?? 31.2357;
     final LatLng initialPosition = LatLng(lat, lng);
     final authProvider = Provider.of<AuthenticationProvider>(
       context,
@@ -33,10 +47,10 @@ class _EventDetailsState extends State<EventDetails> {
     final currentUserId = authProvider
         .getUser()
         ?.id;
-    bool isCreator = (event.creatorUserId == currentUserId) ? true : false;
+    bool isCreator = (event!.creatorUserId == currentUserId) ? true : false;
 
     final Set<Marker> markers = {};
-    if (event.latitude != null && event.longitude != null) {
+    if (event!.latitude != null && event!.longitude != null) {
       markers.add(
         Marker(
           markerId: const MarkerId("event_location"),
@@ -52,8 +66,18 @@ class _EventDetailsState extends State<EventDetails> {
         actions: isCreator
             ? [
           IconButton(
-            onPressed: () {
+            onPressed: () async {
+              final updatedEvent = await Navigator.pushNamed(
+                context,
+                AppRoutes.EditEvent.routeName,
+                arguments: event,
+              ) as Event?;
 
+              if (updatedEvent != null) {
+                setState(() {
+                  event = updatedEvent;
+                });
+              }
             },
             icon: Icon(
               Icons.edit_outlined,
@@ -68,7 +92,7 @@ class _EventDetailsState extends State<EventDetails> {
                   "You want to delete this event?",
                   posActionText: "Delete",
                   onPosActionClick: () async {
-                    await EventsDao().deleteEvent(event.id!);
+                    await EventsDao().deleteEvent(event!.id!);
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                           content: Text('Event deleted successfully')),
@@ -97,14 +121,14 @@ class _EventDetailsState extends State<EventDetails> {
               ClipRRect(
                 borderRadius: BorderRadius.circular(24),
                 child: Image.asset(
-                  event.getCategoryImage(),
+                  event!.getCategoryImage(),
                   height: 200,
                   fit: BoxFit.cover,
                 ),
               ),
 
               Text(
-                event.title ?? "",
+                event!.title ?? "",
                 style: Theme
                     .of(context)
                     .textTheme
@@ -147,7 +171,7 @@ class _EventDetailsState extends State<EventDetails> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          event.date?.formatFullDate() ?? "",
+                          event!.date?.formatFullDate() ?? "",
                           style: Theme
                               .of(context)
                               .textTheme
@@ -158,7 +182,7 @@ class _EventDetailsState extends State<EventDetails> {
                         SizedBox(height: 4),
 
                         Text(
-                          event.time?.formatTime() ?? "",
+                          event!.time?.formatTime() ?? "",
                           style: Theme
                               .of(context)
                               .textTheme
@@ -203,7 +227,7 @@ class _EventDetailsState extends State<EventDetails> {
                   ),
                   SizedBox(height: 8),
                   Text(
-                    event.description ?? "",
+                    event!.description ?? "",
                     style: Theme
                         .of(context)
                         .textTheme

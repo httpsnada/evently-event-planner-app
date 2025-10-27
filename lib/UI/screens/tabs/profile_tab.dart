@@ -6,6 +6,8 @@ import 'package:evently/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../l10n/app_localizations.dart';
+
 
 class ProfileTab extends StatefulWidget {
   ProfileTab({super.key});
@@ -30,6 +32,7 @@ class _ProfileTabState extends State<ProfileTab> {
     var langProvider = Provider.of<LanguageProvider>(context);
     var themeProvider = Provider.of<ThemeProvider>(context);
     var authProvider = Provider.of<AuthenticationProvider>(context);
+    var appLocale = AppLocalizations.of(context)!;
 
     return Padding(
       padding: EdgeInsets.all(16.0),
@@ -38,7 +41,7 @@ class _ProfileTabState extends State<ProfileTab> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Text("Language", style: Theme
+            Text(appLocale.language, style: Theme
                 .of(context)
                 .textTheme
                 .bodyMedium
@@ -103,7 +106,7 @@ class _ProfileTabState extends State<ProfileTab> {
             ),
 
 
-            Text("Theme Mode", style: Theme
+            Text(appLocale.theme, style: Theme
                 .of(context)
                 .textTheme
                 .bodyMedium
@@ -184,7 +187,7 @@ class _ProfileTabState extends State<ProfileTab> {
                   children: [
                     Icon(Icons.logout, color: Colors.white,),
                     SizedBox(width: 12,),
-                    Text("Log out")
+                    Text(appLocale.logout)
                   ],
                 ))
 

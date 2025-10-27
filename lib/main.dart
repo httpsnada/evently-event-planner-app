@@ -5,6 +5,7 @@ import 'package:evently/UI/provider/LanguageProvider.dart';
 import 'package:evently/UI/provider/ThemeProvider.dart';
 import 'package:evently/UI/screens/AddEvent/AddEventScreen.dart';
 import 'package:evently/UI/screens/Details/EventDetails.dart';
+import 'package:evently/UI/screens/Edit/EditScreen.dart';
 import 'package:evently/UI/screens/home/HomeScreen.dart';
 import 'package:evently/UI/screens/login/LoginScreen.dart';
 import 'package:evently/UI/screens/onborading/AppOnboardingScreens.dart';
@@ -63,6 +64,7 @@ class MyApp extends StatelessWidget {
         AppRoutes.HomeScreen.routeName: (context) => HomeScreen(),
         AppRoutes.AddEventScreen.routeName: (context) => AddEventScreen(),
         AppRoutes.EventDetails.routeName: (context) => EventDetails(),
+        AppRoutes.EditEvent.routeName: (context) => EditEvent(),
       },
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,

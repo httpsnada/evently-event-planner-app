@@ -26,6 +26,30 @@ class Event {
     this.longitude,
   });
 
+  Event copyWith({
+    String? id,
+    String? creatorUserId,
+    String? title,
+    String? description,
+    DateTime? date,
+    DateTime? time,
+    int? categoryID,
+    double? latitude,
+    double? longitude,
+  }) {
+    return Event(
+      id: id ?? this.id,
+      creatorUserId: creatorUserId ?? this.creatorUserId,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      date: date ?? this.date,
+      time: time ?? this.time,
+      categoryID: categoryID ?? this.categoryID,
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
+    );
+  }
+
   String getMonthName(DateTime? date) {
     if (date == null) return "unknown";
 

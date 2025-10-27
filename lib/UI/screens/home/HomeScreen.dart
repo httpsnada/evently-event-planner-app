@@ -1,6 +1,7 @@
 import 'package:evently/UI/provider/AuthenticationProvider.dart';
 import 'package:evently/UI/screens/tabs/home_tab.dart';
 import 'package:evently/UI/screens/tabs/maps_tab.dart';
+import 'package:evently/l10n/app_localizations.dart';
 import 'package:evently/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -37,6 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
     AuthenticationProvider provider = Provider.of<AuthenticationProvider>(
       context,
     );
+    var appLocale = AppLocalizations.of(context)!;
     var user = provider.getUser();
     // TODO: implement build
     return Scaffold(
@@ -55,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
             if (user?.name?.isEmpty == false) ...[
               //separated operator
               Text(
-                "Welcome Back ✨",
+                appLocale.welcomeBack,
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w300,
@@ -88,7 +90,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   SizedBox(width: 4),
                   Text(
-                    "Sohag , Egypt",
+                    appLocale.location,
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w300,
@@ -139,12 +141,12 @@ class _HomeScreenState extends State<HomeScreen> {
           BottomNavigationBarItem(
             icon: Icon(Icons.home_outlined),
             activeIcon: Icon(Icons.home),
-            label: "Home",
+            label: appLocale.home,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.location_on_outlined),
             activeIcon: Icon(Icons.location_on),
-            label: "Map",
+            label: appLocale.map,
           ), BottomNavigationBarItem(
             icon: SizedBox(),
             label: "",
@@ -152,12 +154,12 @@ class _HomeScreenState extends State<HomeScreen> {
           BottomNavigationBarItem(
             icon: Icon(Icons.favorite_border_rounded),
             activeIcon: Icon(Icons.favorite),
-            label: "Love",
+            label: appLocale.love,
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person_outline),
             activeIcon: Icon(Icons.person),
-            label: "Profile",
+            label: appLocale.profile,
           ),
         ],
       ),

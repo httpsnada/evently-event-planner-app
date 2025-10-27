@@ -1,43 +1,85 @@
-import 'package:evently/UI/common/CustomFormField.dart';
-import 'package:evently/UI/common/events_tabs.dart';
-import 'package:evently/UI/design/design.dart';
 import 'package:evently/UI/extensions/context_extention.dart';
 import 'package:evently/UI/extensions/date_time_extension.dart';
-import 'package:evently/UI/provider/AuthenticationProvider.dart';
-import 'package:evently/UI/screens/select_location/select_location.dart';
-import 'package:evently/database/EventsDao.dart';
-import 'package:evently/database/model/Category.dart';
-import 'package:evently/database/model/Event.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:icons_plus/icons_plus.dart';
 import 'package:provider/provider.dart';
 
-class AddEventScreen extends StatefulWidget {
-  AddEventScreen({super.key});
+import '../../../database/EventsDao.dart';
+import '../../../database/model/Category.dart';
+import '../../../database/model/Event.dart';
+import '../../common/CustomFormField.dart';
+import '../../common/events_tabs.dart';
+import '../../design/design.dart';
+import '../../provider/AuthenticationProvider.dart';
+import '../select_location/select_location.dart';
+
+class EditEvent extends StatefulWidget {
+  EditEvent({super.key});
 
   @override
-  State<AddEventScreen> createState() => _AddEventScreenState();
+  State<EditEvent> createState() => _EditEventState();
 }
 
-class _AddEventScreenState extends State<AddEventScreen> {
+class _EditEventState extends State<EditEvent> {
   int selectedTabIndex = 0;
-  List<Category> categories = Category.getAllCategories(includeAll: false);
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
-  double? _eventLatitude;
-  double? _eventLongitude;
-
+  List<Category> categories = Category.getAllCategories(includeAll: false);
   var formKey = GlobalKey<FormState>();
+  late Event event;
+  double? eventLatitude;
+  double? eventLongitude;
+  DateTime? selectedDate;
+  TimeOfDay? selectedTime;
+
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //   event = ModalRoute.of(context)?.settings.arguments as Event;
+  //
+  //   titleController.text = event.title ?? "";
+  //   descriptionController.text = event.description ?? "";
+  //   selectedTabIndex = (event.categoryID ?? 1) - 1;
+  //   eventLatitude = event.latitude ?? 30.0444;
+  //   eventLongitude = event.longitude ?? 31.2357;
+  //   selectedDate = event.date ?? DateTime.now();
+  //   selectedTime = event.time != null
+  //       ? TimeOfDay.fromDateTime(event.time!)
+  //       : TimeOfDay.now();
+  // }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final route = ModalRoute.of(context);
+      if (route != null && route.settings.arguments is Event) {
+        event = route.settings.arguments as Event;
+
+        setState(() {
+          titleController.text = event.title ?? "";
+          descriptionController.text = event.description ?? "";
+          selectedTabIndex = (event.categoryID ?? 1) - 1;
+          eventLatitude = event.latitude ?? 30.0444;
+          eventLongitude = event.longitude ?? 31.2357;
+          selectedDate = event.date ?? DateTime.now();
+          selectedTime = event.time != null
+              ? TimeOfDay.fromDateTime(event.time!)
+              : TimeOfDay.now();
+        });
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //resizeToAvoidBottomInset: true,
-      appBar: AppBar(title: Text("Create Event"), centerTitle: true),
+      appBar: AppBar(title: Text("Edit Event"), centerTitle: true),
+
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(16),
         child: Form(
           key: formKey,
           child: SingleChildScrollView(
@@ -58,8 +100,10 @@ class _AddEventScreenState extends State<AddEventScreen> {
 
                 SizedBox(height: 8),
 
-                EventsTabs(categories, revered: true, selectedTabIndex, (index,
-                    category,) {
+                EventsTabs(categories, revered: true, selectedTabIndex, (
+                  index,
+                  category,
+                ) {
                   setState(() {
                     selectedTabIndex = index;
                   });
@@ -70,21 +114,18 @@ class _AddEventScreenState extends State<AddEventScreen> {
                   labelText: "Event Title",
                   prefixIcon: Icons.edit_note_outlined,
                   validator: (text) {
-                    if (text == null || text
-                        .trim()
-                        .isEmpty) {
+                    if (text == null || text.trim().isEmpty) {
                       return "please enter a title";
                     }
                   },
                 ),
+
                 CustomFormField(
                   controller: descriptionController,
                   labelText: "Event Description",
                   lines: 5,
                   validator: (text) {
-                    if (text == null || text
-                        .trim()
-                        .isEmpty) {
+                    if (text == null || text.trim().isEmpty) {
                       return "please enter a description";
                     }
                   },
@@ -99,15 +140,10 @@ class _AddEventScreenState extends State<AddEventScreen> {
                         SizedBox(width: 6),
                         Text(
                           "Event Date",
-                          style: Theme
-                              .of(context)
-                              .textTheme
-                              .bodyMedium
+                          style: Theme.of(context).textTheme.bodyMedium
                               ?.copyWith(
-                            fontFamily: GoogleFonts
-                                .inter()
-                                .fontFamily,
-                          ),
+                                fontFamily: GoogleFonts.inter().fontFamily,
+                              ),
                         ),
                       ],
                     ),
@@ -117,18 +153,9 @@ class _AddEventScreenState extends State<AddEventScreen> {
                         chooseDate(context);
                       },
                       child: Text(
-                        selectedDate == null
-                            ? "Choose Date"
-                            : selectedDate?.format() ?? "",
-
-                        style: Theme
-                            .of(context)
-                            .textTheme
-                            .bodyMedium
-                            ?.copyWith(
-                          fontFamily: GoogleFonts
-                              .inter()
-                              .fontFamily,
+                        selectedDate?.format() ?? "Select a date",
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontFamily: GoogleFonts.inter().fontFamily,
                           color: AppColors.primary,
                         ),
                       ),
@@ -145,15 +172,10 @@ class _AddEventScreenState extends State<AddEventScreen> {
                         SizedBox(width: 6),
                         Text(
                           "Event Time",
-                          style: Theme
-                              .of(context)
-                              .textTheme
-                              .bodyMedium
+                          style: Theme.of(context).textTheme.bodyMedium
                               ?.copyWith(
-                            fontFamily: GoogleFonts
-                                .inter()
-                                .fontFamily,
-                          ),
+                                fontFamily: GoogleFonts.inter().fontFamily,
+                              ),
                         ),
                       ],
                     ),
@@ -163,17 +185,11 @@ class _AddEventScreenState extends State<AddEventScreen> {
                         chooseTime(context);
                       },
                       child: Text(
-                        selectedTime == null
-                            ? "Choose Time"
-                            : selectedTime?.format(context) ?? "",
-                        style: Theme
-                            .of(context)
-                            .textTheme
-                            .bodyMedium
-                            ?.copyWith(
-                          fontFamily: GoogleFonts
-                              .inter()
-                              .fontFamily,
+                        selectedTime != null
+                            ? selectedTime!.format(context)
+                            : "Select a time",
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontFamily: GoogleFonts.inter().fontFamily,
                           color: AppColors.primary,
                         ),
                       ),
@@ -189,18 +205,18 @@ class _AddEventScreenState extends State<AddEventScreen> {
                     );
                     if (picked != null) {
                       setState(() {
-                        _eventLatitude = picked.latitude;
-                        _eventLongitude = picked.longitude;
+                        eventLatitude = picked.latitude;
+                        eventLongitude = picked.longitude;
                       });
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                      foregroundColor: AppColors.primary,
-                      backgroundColor: Colors.transparent,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      padding: EdgeInsets.all(8)
+                    foregroundColor: AppColors.primary,
+                    backgroundColor: Colors.transparent,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    padding: EdgeInsets.all(8),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -222,9 +238,8 @@ class _AddEventScreenState extends State<AddEventScreen> {
                           ),
                           SizedBox(width: 8),
                           Text(
-                              _eventLatitude == null ? "Choose Event Location"
-                                  : '${_eventLatitude!.toStringAsFixed(
-                                  4)}, ${_eventLongitude!.toStringAsFixed(4)}'),
+                            '${eventLatitude?.toStringAsFixed(4)}, ${eventLongitude?.toStringAsFixed(4)}',
+                          ),
                         ],
                       ),
                       Icon(
@@ -232,50 +247,56 @@ class _AddEventScreenState extends State<AddEventScreen> {
                         color: AppColors.primary,
                         size: 24,
                       ),
-
                     ],
                   ),
                 ),
-
               ],
             ),
           ),
         ),
       ),
+
       bottomNavigationBar: Padding(
         padding: EdgeInsets.all(16.0),
         child: ElevatedButton(
           onPressed: () {
-            createEvent();
+            updateEvent();
           },
-          child: Text("Add Event"),
+          child: Text("Update Event"),
         ),
       ),
     );
   }
 
-  DateTime? selectedDate;
-  TimeOfDay? selectedTime;
-
   void chooseDate(BuildContext context) async {
+    final validInitialDate =
+        (selectedDate != null && selectedDate!.isAfter(DateTime.now()))
+        ? selectedDate!
+        : DateTime.now();
     var date = await showDatePicker(
       context: context,
+      initialDate: validInitialDate,
       firstDate: DateTime.now(),
       lastDate: DateTime.now().add(Duration(days: 60)),
     );
-    setState(() {
-      selectedDate = date;
-    });
+    if (date != null && mounted) {
+      setState(() {
+        selectedDate = date;
+        // print('$selectedDate');
+      });
+    }
   }
 
   void chooseTime(BuildContext context) async {
     var time = await showTimePicker(
       context: context,
-      initialTime: TimeOfDay.now(),
+      initialTime: selectedTime ?? TimeOfDay.now(),
     );
-    setState(() {
-      selectedTime = time;
-    });
+    if (time != null && mounted) {
+      setState(() {
+        selectedTime = time;
+      });
+    }
   }
 
   bool validate() {
@@ -294,41 +315,38 @@ class _AddEventScreenState extends State<AddEventScreen> {
     return isValid;
   }
 
-  void createEvent() async {
-    validate();
+  void updateEvent() async {
     if (!validate()) {
       return;
     }
-    //show loading dialog
     var authProvider = Provider.of<AuthenticationProvider>(
       context,
       listen: false,
     );
-    var event = Event(
-        title: titleController.text,
-        description: descriptionController.text,
-        date: selectedDate,
-        time: selectedTime?.toDateTime(),
-        categoryID: categories[selectedTabIndex].id,
-        creatorUserId: authProvider
-            .getUser()
-            ?.id,
-        latitude: _eventLatitude,
-        longitude: _eventLongitude
+
+    final updatedEvent = event.copyWith(
+      title: titleController.text,
+      description: descriptionController.text,
+      date: selectedDate,
+      time: selectedTime?.toDateTime(),
+      categoryID: categories[selectedTabIndex].id,
+      creatorUserId: authProvider.getUser()?.id,
+      latitude: eventLatitude,
+      longitude: eventLongitude,
     );
+
     context.showLoadingDialog(
-      message: "Creating Event ...",
+      message: "Updating Event ...",
       isDismissable: false,
     );
-    await EventsDao.addEvent(event);
-    //hide loading dialog
+
+    await EventsDao.updateEvent(updatedEvent);
+
     Navigator.pop(context);
-    context.showMessage(
-      "Event created successfully ...",
-      posActionText: "Ok",
-      onPosActionClick: () {
-        Navigator.pop(context);
-      },
-    );
+
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Event updated successfully')));
+    Navigator.pop(context, updatedEvent);
   }
 }

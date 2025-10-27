@@ -86,4 +86,13 @@ class EventsDao {
     }
   }
 
+
+  static Future<void> updateEvent(Event event) async {
+    try {
+      await _getEventsCollection().doc(event.id).update(event.toMap());
+    } catch (e) {
+      print("Error updating event: $e");
+    }
+  }
+
 }
